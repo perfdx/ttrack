@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TT-2026 · Transalp Live</title>
+
+  <!-- Leaflet (OpenStreetMap-Karte) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+          integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+  <link rel="stylesheet" href="css/widget.css" />
+</head>
+<body>
+  <!-- ===== Einbettbares Widget ===== -->
+  <div id="tt-widget" class="tt-widget">
+    <header class="tt-header">
+      <div class="tt-title">
+        <span id="title">TT-2026 · Transalp Live</span>
+        <span id="status" class="badge live">LIVE</span>
+      </div>
+      <button id="gear" title="Zeit-Simulator (Test)">⚙</button>
+    </header>
+
+    <div class="tt-stage">
+      <span id="stage-name">—</span>
+      <span id="stage-badge" class="stage-badge">—</span>
+    </div>
+
+    <!-- Karte + Countdown/Status-Overlay -->
+    <div class="tt-mapwrap">
+      <div id="map"></div>
+      <div id="overlay" class="overlay"></div>
+    </div>
+
+    <!-- Live-Kennzahlen -->
+    <div class="tt-metrics">
+      <div class="metric"><label>Distanz</label><span id="m-dist">– / – km</span></div>
+      <div class="metric"><label>Tempo</label><span id="m-speed">– km/h</span></div>
+      <div class="metric"><label>Höhe</label><span id="m-ele">– m</span></div>
+      <div class="metric"><label>Steigung</label><span id="m-grade">– %</span></div>
+      <div class="metric"><label>Restzeit</label><span id="m-remain">–</span></div>
+      <div class="metric"><label>Ankunft</label><span id="m-arrival">–</span></div>
+    </div>
+    <div class="tt-progress"><div class="tt-progress-bar"><span id="m-progress"></span></div><span id="m-pct" class="tt-pct">0 %</span></div>
+
+    <!-- Höhenprofil -->
+    <div class="tt-elevation">
+      <svg id="elevation"></svg>
+    </div>
+
+    <!-- Zeit-Simulator (Test-Werkzeug, normalerweise verborgen) -->
+    <div id="sim-panel" class="sim-panel"></div>
+
+    <footer class="tt-footer">Simulierte Live-Verfolgung · Anzeige in Ortszeit (CEST)</footer>
+  </div>
+
+  <script type="module" src="js/widget.js"></script>
+</body>
+</html>
