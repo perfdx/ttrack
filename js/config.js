@@ -4,8 +4,11 @@
 // ===========================================================================
 
 export const CONFIG = {
-  // Titel im Widget-Kopf.
-  title: 'TT-2026 · Transalp Live',
+  // Untertitel neben dem Logo im Widget-Kopf.
+  title: 'Tour Transalp 2026',
+
+  // Vereins-/Team-Website (Logo + Teamname verlinken hierauf, neuer Tab).
+  website: 'https://kette-kurve-kontext.onepage.me/',
 
   // Ordner mit den GPX-Dateien (relativ zu index.html).
   trackDir: 'trackfiles/',
@@ -34,8 +37,8 @@ export const CONFIG = {
   // Das Team fährt als Einheit -> ein gemeinsamer Avatar auf der Karte
   // (Gruppe aus drei Radtrikots). Teamname/-farbe/Trikotfarben frei anpassbar.
   team: {
-    name: 'kette.kurve.kontext',
-    color: '#e6492d',                         // Pulsfarbe (Live-Effekt)
+    name: 'TEAM KETTE.KURVE.KONTEXT',
+    color: '#d36f2e',                         // Pulsfarbe (Terracotta, Marken-Akzent)
     jerseys: ['#ffffff', '#f6a5c0', '#93c8f0'], // Trikots: Weiß / Rosa / Hellblau
   },
 
@@ -43,10 +46,11 @@ export const CONFIG = {
   // flags: Ländercodes (DE, US, …) -> als kleine Flaggen dargestellt.
   // photo: Pfad zum Porträtfoto (optional); focus: Bildausschnitt (object-position).
   // number: Startnummer; color: Trikotfarbe der Fahrerin.
+  // strava/instagram: Profil-Links (leer = Icon dezent ausgegraut, kein Link).
   roster: [
-    { name: 'Dr. Andrea Jeschke', flags: ['DE'],       number: '45B', color: '#ffffff', photo: 'assets/riders/andrea.png', focus: 'center 25%' },
-    { name: 'Katja Mangold',      flags: ['DE'],        number: '45A', color: '#f6a5c0', photo: 'assets/riders/katja.png',  focus: 'center 30%' },
-    { name: 'Tanja Smith',        flags: ['DE', 'US'],  number: '796', color: '#93c8f0', photo: 'assets/riders/tanja.png',  focus: 'center 28%' },
+    { name: 'Dr. Andrea Jeschke', flags: ['DE'],       number: '45B', color: '#ffffff', photo: 'assets/riders/andrea.png', focus: 'center 25%', strava: '', instagram: '' },
+    { name: 'Katja Mangold',      flags: ['DE'],        number: '45A', color: '#f6a5c0', photo: 'assets/riders/katja.png',  focus: 'center 30%', strava: '', instagram: '' },
+    { name: 'Tanja Smith',        flags: ['DE', 'US'],  number: '796', color: '#93c8f0', photo: 'assets/riders/tanja.png',  focus: 'center 28%', strava: '', instagram: '' },
   ],
 
   // Gruppenverhalten: leichte, reproduzierbare (reload-stabile) Tempo-Schwankung.

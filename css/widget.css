@@ -1,21 +1,34 @@
 /* ===========================================================================
    TT-2026 Transalp Live-Tracker — Widget-Styling
+   Marken-Theme „kette.kurve.kontext" (hell, Navy + Terracotta)
    =========================================================================== */
+
+/* Hausnahe Schrift, selbst gehostet (DSGVO-freundlich) */
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 400; font-display: swap; src: url('../assets/fonts/poppins-latin-400-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 500; font-display: swap; src: url('../assets/fonts/poppins-latin-500-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 600; font-display: swap; src: url('../assets/fonts/poppins-latin-600-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 700; font-display: swap; src: url('../assets/fonts/poppins-latin-700-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 800; font-display: swap; src: url('../assets/fonts/poppins-latin-800-normal.woff2') format('woff2'); }
+@font-face { font-family: 'Caveat'; font-style: normal; font-weight: 600; font-display: swap; src: url('../assets/fonts/caveat-latin-600-normal.woff2') format('woff2'); }
+
 :root {
-  --bg: #0f1620;
-  --panel: #16202c;
-  --panel2: #1d2a38;
-  --line: #2a3a4d;
-  --text: #e8eef5;
-  --muted: #93a4b8;
-  --accent: #ff5a2b;
-  --live: #1faf5a;
-  --sim: #f0a500;
+  --bg: #ffffff;       /* Karten-/Grundfläche */
+  --panel: #ffffff;    /* Kopf/Panels */
+  --panel2: #f4f6f8;   /* dezente Flächen */
+  --line: #e3e8ee;     /* Linien/Rahmen */
+  --text: #16191d;     /* nahezu Schwarz */
+  --muted: #6b7783;    /* Sekundärtext */
+  --navy: #1b5376;     /* Markenfarbe (Bergkette/Logo) */
+  --accent: #d36f2e;   /* Terracotta – Pop für Live/Fortschritt */
+  --live: #d36f2e;
+  --sim: #c8851f;      /* Simulator-Amber */
+  --map-bg: #e9eef2;
+  --script: 'Caveat', cursive;
 }
 
 * { box-sizing: border-box; }
-html, body { margin: 0; background: #0a0f15; }
-body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--text); }
+html, body { margin: 0; background: #eef1f4; }
+body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif; color: var(--text); }
 
 .tt-widget {
   max-width: 1160px;
@@ -24,7 +37,7 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
   border: 1px solid var(--line);
   border-radius: 14px;
   overflow: hidden;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 8px 30px rgba(27, 83, 118, 0.12);
 }
 
 /* ---- Kopf ---- */
@@ -32,25 +45,29 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 16px; background: var(--panel); border-bottom: 1px solid var(--line);
 }
-.tt-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; flex-wrap: wrap; }
+.tt-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; flex-wrap: wrap; }
+.tt-logo-link { display: inline-flex; align-items: center; }
+.tt-logo-link:hover { opacity: 0.82; }
+.tt-logo { height: 54px; width: auto; display: block; }
+#title { color: var(--navy); font-weight: 600; font-size: 14px; }
 .tt-team { display: inline-flex; align-items: center; gap: 7px; }
 .team-name { font-size: 13px; color: var(--muted); font-weight: 600; }
 .badge {
   font-size: 11px; font-weight: 800; letter-spacing: 0.08em;
-  padding: 3px 8px; border-radius: 999px; color: #001b0c;
+  padding: 3px 9px; border-radius: 999px; color: #fff;
 }
-.badge.live { background: var(--live); box-shadow: 0 0 0 0 rgba(31,175,90,0.7); animation: pulse 2s infinite; }
-.badge.sim { background: var(--sim); color: #2a1c00; animation: none; }
+.badge.live { background: var(--accent); box-shadow: 0 0 0 0 rgba(211,111,46,0.6); animation: pulse 2s infinite; }
+.badge.sim { background: var(--sim); color: #fff; animation: none; }
 @keyframes pulse {
-  0% { box-shadow: 0 0 0 0 rgba(31,175,90,0.6); }
-  70% { box-shadow: 0 0 0 8px rgba(31,175,90,0); }
-  100% { box-shadow: 0 0 0 0 rgba(31,175,90,0); }
+  0% { box-shadow: 0 0 0 0 rgba(211,111,46,0.55); }
+  70% { box-shadow: 0 0 0 8px rgba(211,111,46,0); }
+  100% { box-shadow: 0 0 0 0 rgba(211,111,46,0); }
 }
 #gear {
-  background: var(--panel2); color: var(--text); border: 1px solid var(--line);
+  background: var(--panel2); color: var(--navy); border: 1px solid var(--line);
   border-radius: 8px; width: 34px; height: 34px; font-size: 16px; cursor: pointer;
 }
-#gear:hover { background: var(--line); }
+#gear:hover { background: #e9eef2; }
 
 /* ---- Etappenzeile ---- */
 .tt-stage {
@@ -73,8 +90,8 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 
 /* ---- Karte ---- */
 .tt-mapwrap { position: relative; }
-#map { height: 360px; width: 100%; background: #1a2330; }
-.leaflet-container { background: #1a2330; }
+#map { height: 360px; width: 100%; background: var(--map-bg); }
+.leaflet-container { background: var(--map-bg); }
 
 /* Team-Avatar: Startnummer (Bib) mit pulsierendem "Live"-Ring */
 .team-marker { background: none; border: none; }
@@ -117,20 +134,24 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
   display: flex; align-items: center; justify-content: space-between;
   margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--line);
 }
-.roster-team { font-weight: 700; font-size: 13px; }
+.roster-team {
+  font-weight: 500; font-size: 12px; color: var(--muted);
+  text-decoration: none;
+}
+.roster-team:hover { color: var(--navy); text-decoration: underline; }
 .rider-card {
   position: relative; overflow: hidden;
   display: flex; align-items: center; gap: 10px;
-  background: linear-gradient(160deg, #223141, #1a2734);
+  background: linear-gradient(160deg, #ffffff, #f5f8fb);
   border: 1px solid var(--line); border-radius: 10px;
   padding: 8px 8px 8px 14px; margin-bottom: 10px;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+  box-shadow: 0 1px 4px rgba(27, 83, 118, 0.08);
 }
 /* dezenter Trikotfarben-Streifen am linken Rand */
 .rider-card::before {
   content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
   background: var(--jersey, transparent);
-  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.28);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.12);
 }
 /* Startnummer dezent, rechts neben den Flaggen */
 .rc-number {
@@ -139,7 +160,7 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 }
 .rc-portrait {
   flex: 0 0 54px; width: 54px; height: 68px; border-radius: 6px;
-  background: radial-gradient(circle at 50% 35%, #3a4d62, #243240);
+  background: radial-gradient(circle at 50% 35%, #dfe6ec, #c7d2dc);
   border: 1px solid var(--line); position: relative; overflow: hidden;
   display: flex; align-items: flex-end; justify-content: center;
 }
@@ -152,41 +173,49 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 /* angedeutete Porträt-Silhouette (Platzhalter) */
 .rc-portrait::before {
   content: ''; position: absolute; bottom: -14px; width: 34px; height: 34px;
-  background: #51647b; border-radius: 50%;
+  background: #b6c2cd; border-radius: 50%;
 }
 .rc-portrait::after {
   content: ''; position: absolute; top: 9px; width: 18px; height: 18px;
-  background: #6b8099; border-radius: 50%;
+  background: #a3b2bf; border-radius: 50%;
 }
 .rc-initials {
   position: relative; z-index: 1; font-size: 11px; font-weight: 800;
-  color: rgba(255,255,255,0.85); margin-bottom: 3px;
+  color: rgba(22,25,29,0.55); margin-bottom: 3px;
 }
 .rc-info { min-width: 0; }
 .rc-flags { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
-.flag { width: 20px; height: auto; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); display: block; }
+.flag { height: 12px; width: auto; border-radius: 2px; display: block; }
 .flag-txt { font-size: 10px; color: var(--muted); }
 .rc-name { font-size: 12.5px; font-weight: 600; line-height: 1.2; }
+/* Strava-/Instagram-Icons dezent unter dem Namen */
+.rc-social { display: flex; align-items: center; gap: 9px; margin-top: 5px; }
+.rc-soc { display: inline-flex; color: var(--muted); line-height: 0; transition: color 0.15s ease, opacity 0.15s ease; }
+.rc-soc svg { width: 16px; height: 16px; display: block; }
+.rc-soc.soc-strava:hover { color: #fc4c02; }
+.rc-soc.soc-ig:hover { color: #e1306c; }
+.rc-soc.disabled { opacity: 0.4; pointer-events: none; }
 
 /* ---- Overlay (Countdown / Status) ---- */
 .overlay {
   position: absolute; inset: 0; display: none;
   align-items: center; justify-content: center;
-  background: rgba(8, 12, 18, 0.62); backdrop-filter: blur(2px); z-index: 600;
+  background: rgba(244, 246, 248, 0.55); backdrop-filter: blur(2px); z-index: 600;
   text-align: center; padding: 16px;
 }
 .overlay.show { display: flex; }
 .ov-card {
-  background: rgba(20, 28, 38, 0.92); border: 1px solid var(--line);
+  background: #ffffff; border: 1px solid var(--line);
   border-radius: 14px; padding: 20px 28px; max-width: 460px;
+  box-shadow: 0 12px 36px rgba(27, 83, 118, 0.18);
 }
-.ov-card h2 { margin: 6px 0 10px; font-size: 22px; }
+.ov-card h2 { margin: 6px 0 10px; font-size: 22px; color: var(--navy); }
 .ov-label { font-size: 12px; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; font-weight: 800; }
 .ov-stats { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
 .ov-stats span { background: var(--panel2); padding: 4px 10px; border-radius: 999px; }
 .ov-when { color: var(--muted); font-size: 13px; margin-bottom: 12px; }
-.ov-timer { font-size: 40px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; color: #fff; }
-.ov-sub { color: var(--muted); font-size: 12px; }
+.ov-timer { font-size: 40px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; color: var(--navy); }
+.ov-sub { color: var(--navy); font-family: var(--script); font-size: 18px; line-height: 1; margin-top: 2px; }
 .spinner {
   width: 34px; height: 34px; margin: 0 auto 12px; border-radius: 50%;
   border: 3px solid var(--line); border-top-color: var(--accent); animation: spin 0.9s linear infinite;
@@ -200,23 +229,23 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 }
 .metric { background: var(--panel); padding: 8px 10px; }
 .metric label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-.metric span { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.metric span { font-size: 14px; font-weight: 500; color: #4a555f; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .tt-progress { display: flex; align-items: center; gap: 10px; padding: 8px 16px; background: var(--panel); }
 .tt-progress-bar { flex: 1; height: 7px; background: var(--panel2); border-radius: 999px; overflow: hidden; }
-.tt-progress-bar span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #ff8a3b, var(--accent)); transition: width 0.2s linear; }
+.tt-progress-bar span { display: block; height: 100%; width: 0; background: linear-gradient(90deg, #eaa775, var(--accent)); transition: width 0.2s linear; }
 .tt-pct { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; min-width: 38px; text-align: right; }
 
 /* ---- Höhenprofil ---- */
 .tt-elevation { background: var(--panel); padding: 6px 8px 2px; }
 #elevation { width: 100%; height: 150px; display: block; }
-.ele-full { fill: rgba(120, 150, 185, 0.18); stroke: #6f8aa8; stroke-width: 1; }
-.ele-trail { fill: rgba(255, 90, 43, 0.35); stroke: var(--accent); stroke-width: 1.5; }
+.ele-full { fill: rgba(27, 83, 118, 0.12); stroke: #4a7ea3; stroke-width: 1; }
+.ele-trail { fill: rgba(211, 111, 46, 0.28); stroke: var(--accent); stroke-width: 1.5; }
 .ele-grid { stroke: var(--line); stroke-width: 0.5; }
 .ele-axis { fill: var(--muted); font-size: 11px; }
 .ele-unit { font-size: 10px; }
-.ele-cursor { stroke: #fff; stroke-width: 1; stroke-dasharray: 3 3; }
-.ele-dot { fill: #fff; stroke: var(--accent); stroke-width: 2; }
+.ele-cursor { stroke: #16191d; stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.55; }
+.ele-dot { fill: var(--accent); stroke: #fff; stroke-width: 2; }
 
 /* ---- Footer ---- */
 .tt-footer { padding: 8px 16px; font-size: 11px; color: var(--muted); background: var(--panel); border-top: 1px solid var(--line); text-align: center; }
@@ -224,19 +253,19 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 /* ---- Zeit-Simulator ---- */
 .sim-panel {
   display: none; flex-direction: column; gap: 8px;
-  padding: 12px 16px; background: #11202b; border-top: 2px solid var(--sim);
+  padding: 12px 16px; background: var(--panel2); border-top: 2px solid var(--sim);
 }
 .sim-panel.open { display: flex; }
 .sim-head { display: flex; align-items: center; justify-content: space-between; }
-.sim-live { background: var(--live); color: #001b0c; border: none; border-radius: 6px; padding: 4px 10px; font-weight: 800; cursor: pointer; }
-.sim-time { font-variant-numeric: tabular-nums; font-size: 13px; color: #ffe08a; }
+.sim-live { background: var(--accent); color: #fff; border: none; border-radius: 6px; padding: 4px 10px; font-weight: 800; cursor: pointer; }
+.sim-time { font-variant-numeric: tabular-nums; font-size: 13px; color: var(--navy); font-weight: 600; }
 .sim-row { display: flex; align-items: center; gap: 8px; }
-.sim-pp { width: 36px; height: 30px; border-radius: 6px; border: 1px solid var(--line); background: var(--panel2); color: var(--text); cursor: pointer; font-size: 14px; }
+.sim-pp { width: 36px; height: 30px; border-radius: 6px; border: 1px solid var(--line); background: #fff; color: var(--navy); cursor: pointer; font-size: 14px; }
 .sim-speeds { display: flex; gap: 6px; flex-wrap: wrap; }
-.sim-speeds button { border: 1px solid var(--line); background: var(--panel2); color: var(--text); border-radius: 6px; padding: 4px 9px; cursor: pointer; font-size: 12px; }
-.sim-speeds button.active { background: var(--sim); color: #2a1c00; border-color: var(--sim); font-weight: 800; }
+.sim-speeds button { border: 1px solid var(--line); background: #fff; color: var(--text); border-radius: 6px; padding: 4px 9px; cursor: pointer; font-size: 12px; }
+.sim-speeds button.active { background: var(--sim); color: #fff; border-color: var(--sim); font-weight: 800; }
 .sim-scrub { width: 100%; accent-color: var(--sim); }
-.sim-jump select { background: var(--panel2); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px; }
+.sim-jump select { background: #fff; color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px; }
 .sim-jump label { font-size: 12px; color: var(--muted); }
 
 /* ---- Mobiler Fahrerinnen-Strip (Overlay über der Karte) ---- */
@@ -244,10 +273,11 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 .rs-chip {
   flex: 1 1 0; min-width: 0;
   display: flex; align-items: center; gap: 7px;
-  background: rgba(18, 26, 36, 0.5);
-  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(225, 235, 243, 0.85);   /* hell, leicht blau (Navy-Familie) */
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  border: 1px solid rgba(27, 83, 118, 0.18);
   border-radius: 10px; padding: 5px 7px;
+  box-shadow: 0 1px 4px rgba(27, 83, 118, 0.18);
 }
 .rs-portrait {
   flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%;
@@ -261,9 +291,9 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 .rs-initials { font-size: 10px; font-weight: 800; color: rgba(255, 255, 255, 0.85); }
 .rs-info { min-width: 0; line-height: 1.25; }
 .rs-flags { display: flex; align-items: center; gap: 4px; }
-.rs-flags .flag { width: 16px; }
-.rs-num { font-size: 10px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
-.rs-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.rs-flags .flag { height: 10px; width: auto; }
+.rs-num { font-size: 10.5px; font-weight: 800; color: var(--navy); font-variant-numeric: tabular-nums; }
+.rs-name { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* ---- Responsive ---- */
 @media (max-width: 720px) {
@@ -288,7 +318,11 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
   #overlay.show ~ .tt-rider-strip { display: none; }
 }
 @media (max-width: 560px) {
+  .tt-logo { height: 46px; }
   .tt-metrics { grid-template-columns: repeat(3, 1fr); }
+  .metric { padding: 7px 8px; }
+  .metric label { font-size: 9px; }
+  .metric span { font-size: 12px; }   /* kompakter -> kein Umbruch */
   #map { height: 300px; }
   .ov-timer { font-size: 32px; }
 }

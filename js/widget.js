@@ -18,11 +18,22 @@ import { fmtCountdown, fmtDuration, fmtStageTime } from './countdown.js';
 function flagSVG(code) {
   const flags = {
     DE: `<svg viewBox="0 0 5 3" class="flag" aria-label="Deutschland"><rect width="5" height="1" y="0" fill="#000"/><rect width="5" height="1" y="1" fill="#D00"/><rect width="5" height="1" y="2" fill="#FFCE00"/></svg>`,
-    US: `<svg viewBox="0 0 7 3" class="flag" aria-label="USA"><rect width="7" height="3" fill="#fff"/>` +
-        [0, 2, 4, 6, 8, 10, 12].map((i) => `<rect width="7" height="${(3 / 13).toFixed(3)}" y="${(i * 3 / 13).toFixed(3)}" fill="#B22234"/>`).join('') +
-        `<rect width="2.8" height="${(3 * 7 / 13).toFixed(3)}" fill="#3C3B6E"/></svg>`,
+    US: `<svg viewBox="0 0 19 10" class="flag" aria-label="USA"><rect width="19" height="10" fill="#fff"/>` +
+        [0, 2, 4, 6, 8, 10, 12].map((i) => `<rect width="19" height="${(10 / 13).toFixed(3)}" y="${(i * 10 / 13).toFixed(3)}" fill="#B22234"/>`).join('') +
+        `<rect width="7.6" height="${(10 * 7 / 13).toFixed(3)}" fill="#3C3B6E"/></svg>`,
   };
   return flags[code] || `<span class="flag flag-txt">${code}</span>`;
+}
+
+// Strava-/Instagram-Icons (dezent) mit optionalem Profil-Link. Ist der Link leer,
+// wird das Icon ausgegraut und ist nicht klickbar (Links folgen später).
+function socialLinks(r) {
+  const strava = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>`;
+  const insta = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg>`;
+  const item = (cls, url, label, svg) => url
+    ? `<a class="rc-soc ${cls}" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${label}-Profil">${svg}</a>`
+    : `<span class="rc-soc ${cls} disabled" aria-label="${label} (Link folgt)" title="Link folgt">${svg}</span>`;
+  return `<div class="rc-social">${item('soc-strava', r.strava, 'Strava', strava)}${item('soc-ig', r.instagram, 'Instagram', insta)}</div>`;
 }
 
 class Widget {
@@ -72,7 +83,7 @@ class Widget {
     if (!el) return;
     el.innerHTML = `
       <div class="roster-head">
-        <span class="roster-team">${CONFIG.team.name}</span>
+        <a class="roster-team" href="${CONFIG.website}" target="_blank" rel="noopener noreferrer">${CONFIG.team.name}</a>
       </div>
       ${CONFIG.roster.map((r) => {
         const initials = r.name.replace(/^Dr\.?\s*/, '').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
@@ -92,6 +103,7 @@ class Widget {
           <div class="rc-info">
             <div class="rc-flags">${flags}${number}</div>
             <div class="rc-name">${r.name}</div>
+            ${socialLinks(r)}
           </div>
         </div>`;
       }).join('')}
@@ -209,7 +221,7 @@ class Widget {
 
     if (d.mode === 'finished') {
       overlay.className = 'overlay show';
-      overlay.innerHTML = `<div class="ov-card"><h2>🏁 Transalp beendet</h2><p>Alle ${CONFIG.stages.length} Etappen gefahren. Chapeau!</p></div>`;
+      overlay.innerHTML = `<div class="ov-card"><h2>🏁 Tour Transalp 2026 beendet</h2><p>Alle ${CONFIG.stages.length} Etappen gefahren. Chapeau!</p></div>`;
       this.setInfo({ name: 'TT-2026 Transalp', badge: 'Ziel', done: 1, dist: 0, total: 0, ele: 0, grade: 0, speed: 0, remain: 0, arrival: '' });
       return;
     }

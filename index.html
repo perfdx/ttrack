@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>TT-2026 · Transalp Live</title>
+  <title>KETTE.KURVE.KONTEXT · Tour Transalp 2026 Live</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo/logo.svg" />
 
   <!-- Leaflet (OpenStreetMap-Karte) -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
@@ -18,9 +19,11 @@
   <div id="tt-widget" class="tt-widget">
     <header class="tt-header">
       <div class="tt-title">
-        <span id="title">TT-2026 · Transalp Live</span>
+        <a class="tt-logo-link" href="https://kette-kurve-kontext.onepage.me/" target="_blank" rel="noopener noreferrer" title="kette.kurve.kontext">
+          <img class="tt-logo" src="assets/logo/logo.svg" alt="KETTE.KURVE.KONTEXT" />
+        </a>
+        <span id="title">Tour Transalp 2026</span>
         <span id="status" class="badge live">LIVE</span>
-        <span id="team" class="tt-team"></span>
       </div>
       <button id="gear" title="Zeit-Simulator (Test)">⚙</button>
     </header>
@@ -65,7 +68,7 @@
     <!-- Zeit-Simulator (Test-Werkzeug, normalerweise verborgen) -->
     <div id="sim-panel" class="sim-panel"></div>
 
-    <footer class="tt-footer">Simulierte Live-Verfolgung · Anzeige in Ortszeit (CEST)</footer>
+    <footer class="tt-footer">Anzeige in Ortszeit (CEST)</footer>
   </div>
 
   <script type="module" src="js/widget.js"></script>
