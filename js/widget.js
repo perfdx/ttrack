@@ -43,6 +43,7 @@ class Widget {
     this.$('title').textContent = CONFIG.title;
     this.renderTeam();
     this.renderRoster();
+    this.renderRiderStrip();
 
     // Simulator über Zahnrad oder ?sim=1.
     this.$('gear').addEventListener('click', () => {
@@ -95,6 +96,29 @@ class Widget {
         </div>`;
       }).join('')}
     `;
+  }
+
+  // Kompakter Fahrerinnen-Strip für Smartphones (Overlay am unteren Kartenrand).
+  renderRiderStrip() {
+    const el = this.$('rider-strip');
+    if (!el) return;
+    const given = (name) => name.replace(/^Dr\.?\s*/, '').split(/\s+/)[0];
+    el.innerHTML = CONFIG.roster.map((r) => {
+      const initials = r.name.replace(/^Dr\.?\s*/, '').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+      const photo = r.photo
+        ? `<img class="rs-photo" src="${r.photo}" alt="${r.name}" loading="lazy" style="object-position:${r.focus || 'center top'}" onerror="this.remove()">`
+        : '';
+      const flags = r.flags.map(flagSVG).join('');
+      const number = r.number ? `<span class="rs-num">#${r.number}</span>` : '';
+      return `
+        <div class="rs-chip" style="--jersey:${r.color || 'transparent'}">
+          <div class="rs-portrait">${photo}<span class="rs-initials">${initials}</span></div>
+          <div class="rs-info">
+            <div class="rs-flags">${flags}${number}</div>
+            <div class="rs-name">${given(r.name)}</div>
+          </div>
+        </div>`;
+    }).join('');
   }
 
   beginLoad(i) {

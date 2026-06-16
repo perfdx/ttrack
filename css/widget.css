@@ -239,15 +239,48 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 .sim-jump select { background: var(--panel2); color: var(--text); border: 1px solid var(--line); border-radius: 6px; padding: 4px; }
 .sim-jump label { font-size: 12px; color: var(--muted); }
 
+/* ---- Mobiler Fahrerinnen-Strip (Overlay über der Karte) ---- */
+.tt-rider-strip { display: none; } /* nur auf Smartphones sichtbar (s. Media-Query) */
+.rs-chip {
+  flex: 1 1 0; min-width: 0;
+  display: flex; align-items: center; gap: 7px;
+  background: rgba(16, 24, 34, 0.78); border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px; padding: 5px 7px;
+}
+.rs-portrait {
+  flex: 0 0 auto; width: 34px; height: 34px; border-radius: 50%;
+  position: relative; overflow: hidden;
+  background: radial-gradient(circle at 50% 35%, #3a4d62, #243240);
+  border: 2px solid var(--jersey, #fff);
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5), 0 1px 3px rgba(0, 0, 0, 0.5);
+  display: flex; align-items: center; justify-content: center;
+}
+.rs-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; }
+.rs-initials { font-size: 10px; font-weight: 800; color: rgba(255, 255, 255, 0.85); }
+.rs-info { min-width: 0; line-height: 1.25; }
+.rs-flags { display: flex; align-items: center; gap: 4px; }
+.rs-flags .flag { width: 16px; }
+.rs-num { font-size: 10px; font-weight: 700; color: var(--muted); font-variant-numeric: tabular-nums; }
+.rs-name { font-size: 12px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
 /* ---- Responsive ---- */
 @media (max-width: 720px) {
   .tt-body { flex-direction: column; }
+  /* Roster unten vertikal gestapelt (kein Horizontal-Scroll) */
   .tt-roster {
     flex: 0 0 auto; width: 100%; border-left: none; border-top: 1px solid var(--line);
-    display: flex; gap: 10px; overflow-x: auto;
+    display: block; overflow: visible;
   }
-  .roster-head { display: none; }
-  .rider-card { flex: 0 0 200px; margin-bottom: 0; }
+  .rider-card { width: 100%; margin-bottom: 10px; }
+  .rider-card:last-child { margin-bottom: 0; }
+
+  /* Fahrerinnen-Strip als Overlay am unteren Kartenrand einblenden */
+  .tt-rider-strip {
+    display: flex; gap: 6px;
+    position: absolute; left: 0; right: 0; bottom: 0; z-index: 650;
+    padding: 7px; pointer-events: none;
+    background: linear-gradient(to top, rgba(8, 12, 18, 0.85), rgba(8, 12, 18, 0));
+  }
 }
 @media (max-width: 560px) {
   .tt-metrics { grid-template-columns: repeat(3, 1fr); }
