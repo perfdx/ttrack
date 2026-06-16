@@ -119,11 +119,26 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 }
 .roster-team { font-weight: 700; font-size: 13px; }
 .rider-card {
+  position: relative; overflow: hidden;
   display: flex; align-items: center; gap: 10px;
   background: linear-gradient(160deg, #223141, #1a2734);
   border: 1px solid var(--line); border-radius: 10px;
-  padding: 8px; margin-bottom: 10px;
+  padding: 8px 8px 8px 14px; margin-bottom: 10px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+}
+/* dezenter Trikotfarben-Streifen am linken Rand */
+.rider-card::before {
+  content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+  background: var(--jersey, transparent);
+  box-shadow: inset -1px 0 0 rgba(0, 0, 0, 0.28);
+}
+/* Startnummer im Rennrad-Plattenstil (über den Flaggen) */
+.rc-number {
+  display: inline-block; margin-bottom: 4px;
+  background: #fff; color: #111; font-weight: 800; font-size: 12px; line-height: 1;
+  letter-spacing: 0.5px; font-variant-numeric: tabular-nums;
+  padding: 2px 6px; border-radius: 3px;
+  border: 1px solid rgba(0, 0, 0, 0.55); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 .rc-portrait {
   flex: 0 0 54px; width: 54px; height: 68px; border-radius: 6px;
