@@ -184,6 +184,13 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
 .flag { width: 20px; height: auto; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); display: block; }
 .flag-txt { font-size: 10px; color: var(--muted); }
 .rc-name { font-size: 12.5px; font-weight: 600; line-height: 1.2; }
+/* Strava-/Instagram-Icons dezent unter dem Namen */
+.rc-social { display: flex; align-items: center; gap: 9px; margin-top: 5px; }
+.rc-soc { display: inline-flex; color: var(--muted); line-height: 0; transition: color 0.15s ease, opacity 0.15s ease; }
+.rc-soc svg { width: 16px; height: 16px; display: block; }
+.rc-soc.soc-strava:hover { color: #fc4c02; }
+.rc-soc.soc-ig:hover { color: #e1306c; }
+.rc-soc.disabled { opacity: 0.4; pointer-events: none; }
 
 /* ---- Overlay (Countdown / Status) ---- */
 .overlay {
