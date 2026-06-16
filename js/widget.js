@@ -81,16 +81,15 @@ class Widget {
         const photo = r.photo
           ? `<img class="rc-photo" src="${r.photo}" alt="${r.name}" loading="lazy" style="object-position:${r.focus || 'center top'}" onerror="this.remove()">`
           : '';
-        // Startnummer im Rennrad-Plattenstil (über den Flaggen).
-        const number = r.number ? `<span class="rc-number">${r.number}</span>` : '';
+        // Startnummer dezent, rechts neben den Flaggen, mit Hashtag.
+        const number = r.number ? `<span class="rc-number">#${r.number}</span>` : '';
         // Dezenter Trikotfarben-Streifen am linken Rand (--jersey).
         const stripe = r.color ? ` style="--jersey:${r.color}"` : '';
         return `
         <div class="rider-card"${stripe}>
           <div class="rc-portrait">${photo}<span class="rc-initials">${initials}</span></div>
           <div class="rc-info">
-            ${number}
-            <div class="rc-flags">${flags}</div>
+            <div class="rc-flags">${flags}${number}</div>
             <div class="rc-name">${r.name}</div>
           </div>
         </div>`;
