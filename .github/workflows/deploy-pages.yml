@@ -1,0 +1,50 @@
+# Stellt das Live-Tracker-Widget als statische Website über GitHub Pages bereit.
+# Läuft bei jedem Push auf main (und manuell per "Run workflow").
+#
+# Einmalige Voraussetzung im Repo: Settings → Pages → "Build and deployment" →
+# Source = "GitHub Actions".
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Rechte, die die offiziellen Pages-Actions benötigen.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Gleichzeitige Deployments vermeiden; laufende bei neuem Push abbrechen.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          # Aktiviert GitHub Pages automatisch (Source = GitHub Actions),
+          # falls noch nicht geschehen. Schlägt dies fehl, einmalig manuell
+          # unter Settings → Pages einstellen.
+          enablement: true
+
+      # Das gesamte Repo-Stammverzeichnis ist die Website (index.html liegt dort).
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
