@@ -62,7 +62,7 @@ class Widget {
     const t = CONFIG.team;
     const el = this.$('team');
     if (!el) return;
-    el.innerHTML = `<span class="team-bib-sm" style="--c:${t.color}">${t.number}</span><span class="team-name">${t.name}</span>`;
+    el.innerHTML = `<span class="team-name">${t.name}</span>`;
   }
 
   // Roster der drei Fahrerinnen (Panini-/Radrenn-Stil) rechts.
@@ -72,7 +72,6 @@ class Widget {
     el.innerHTML = `
       <div class="roster-head">
         <span class="roster-team">${CONFIG.team.name}</span>
-        <span class="roster-num" style="--c:${CONFIG.team.color}">${CONFIG.team.number}</span>
       </div>
       ${CONFIG.roster.map((r) => {
         const initials = r.name.replace(/^Dr\.?\s*/, '').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();

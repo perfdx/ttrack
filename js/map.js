@@ -71,7 +71,7 @@ export class MapView {
     });
     const start = pos ? [pos.lat, pos.lon] : a;
     this.teamMarker = L.marker(start, { icon, zIndexOffset: 1000 }).addTo(this.map)
-      .bindTooltip(`${team.name} · ${team.number}`, { direction: 'top', offset: [0, -16] });
+      .bindTooltip(team.name, { direction: 'top', offset: [0, -16] });
 
     this.map.fitBounds(this.fullLine.getBounds(), { padding: [24, 24] });
   }

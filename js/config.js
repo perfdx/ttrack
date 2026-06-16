@@ -35,7 +35,6 @@ export const CONFIG = {
   // (Gruppe aus drei Radtrikots). Teamname/-farbe/Trikotfarben frei anpassbar.
   team: {
     name: 'kette.kurve.kontext',
-    number: '45A',
     color: '#e6492d',                         // Pulsfarbe (Live-Effekt)
     jerseys: ['#ffffff', '#f6a5c0', '#93c8f0'], // Trikots: Weiß / Rosa / Hellblau
   },
