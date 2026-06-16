@@ -57,7 +57,12 @@ export class MapView {
     const team = CONFIG.team;
     const icon = L.divIcon({
       className: 'team-marker',
-      html: `<div class="team-bib" style="--c:${team.color}"><span>${team.number}</span></div>`,
+      // Pulsierende Ringe hinter der Startnummer -> "Live-Standort"-Eindruck.
+      html: `<div class="team-avatar" style="--c:${team.color}">
+               <span class="team-pulse"></span>
+               <span class="team-pulse team-pulse-2"></span>
+               <div class="team-bib"><span>${team.number}</span></div>
+             </div>`,
       iconSize: [40, 30], iconAnchor: [20, 15],
     });
     const start = pos ? [pos.lat, pos.lon] : a;

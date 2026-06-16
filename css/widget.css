@@ -81,15 +81,43 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 #map { height: 360px; width: 100%; background: #1a2330; }
 .leaflet-container { background: #1a2330; }
 
-/* Team-Avatar: Startnummer (Bib) */
+/* Team-Avatar: Startnummer (Bib) mit pulsierendem "Live"-Ring */
 .team-marker { background: none; border: none; }
+.team-avatar {
+  position: relative; width: 40px; height: 30px;
+  display: flex; align-items: center; justify-content: center;
+}
+/* pulsierende Ringe (klassischer Live-Standort-Effekt) */
+.team-pulse {
+  position: absolute; left: 50%; top: 50%; width: 22px; height: 22px;
+  margin: -11px 0 0 -11px; border-radius: 50%;
+  background: var(--c); z-index: 0; pointer-events: none;
+  animation: team-pulse 1.6s cubic-bezier(0.2, 0.6, 0.3, 1) infinite;
+}
+.team-pulse-2 { animation-delay: 0.8s; }
+@keyframes team-pulse {
+  0%   { transform: scale(0.5); opacity: 0.7; }
+  60%  { opacity: 0.18; }
+  100% { transform: scale(4.6); opacity: 0; }
+}
 .team-bib {
+  position: relative; z-index: 1;
   min-width: 40px; height: 30px; padding: 0 6px;
   background: var(--c); color: #fff; border-radius: 5px;
   display: flex; align-items: center; justify-content: center;
   border: 2px solid #fff; box-shadow: 0 2px 7px rgba(0,0,0,0.55);
+  animation: team-bib-glow 1.6s ease-in-out infinite;
+}
+@keyframes team-bib-glow {
+  0%, 100% { box-shadow: 0 2px 7px rgba(0,0,0,0.55), 0 0 0 0 rgba(255,255,255,0); }
+  50%      { box-shadow: 0 2px 7px rgba(0,0,0,0.55), 0 0 9px 1px rgba(255,255,255,0.35); }
 }
 .team-bib span { font-size: 15px; font-weight: 800; line-height: 1; letter-spacing: 0.02em; }
+/* Nutzer mit reduzierter Bewegung: kein Pulsieren */
+@media (prefers-reduced-motion: reduce) {
+  .team-pulse { animation: none; opacity: 0; }
+  .team-bib { animation: none; }
+}
 
 /* ---- Fahrerinnen-Roster (Panini-Stil) ---- */
 .roster-head {
