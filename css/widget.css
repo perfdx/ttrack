@@ -71,11 +71,16 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
 
 /* ---- Etappenzeile ---- */
 .tt-stage {
-  display: flex; align-items: center; gap: 10px; justify-content: space-between;
+  display: flex; align-items: center; gap: 8px; justify-content: space-between;
   padding: 10px 16px; background: var(--panel2); border-bottom: 1px solid var(--line);
-  font-weight: 600;
+  font-weight: 500;
+}
+#stage-name {
+  flex: 1 1 auto; min-width: 0; font-size: 14px; color: #3f4a54;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .stage-badge {
+  flex: 0 0 auto; white-space: nowrap;
   font-size: 11px; color: var(--muted); border: 1px solid var(--line);
   padding: 2px 8px; border-radius: 999px;
 }
@@ -326,6 +331,8 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
   .metric label { font-size: 9px; }
   .metric span { font-size: 12px; }   /* kompakter -> kein Umbruch */
   #map { height: 300px; }
+  .tt-stage { padding: 9px 14px; }
+  #stage-name { font-size: 13px; }
   /* Countdown-Banner kompakter */
   .ov-card { padding: 14px 16px; max-width: 320px; }
   .ov-label { font-size: 11px; }
