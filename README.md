@@ -1,14 +1,17 @@
 # TT-2026 Transalp – Live-Tracker-Widget
 
-Einbettbares Website-Widget, das drei Fahrer „live" entlang der Etappenrouten
-eines Rennrad-Transalp-Rennens (Lienz → Riva, 7 Etappen) zeigt – im Stil der
-Strava-Streckenanimation. Karte (OpenStreetMap via Leaflet), Höhenprofil (SVG),
-aktuelle Live-Position der drei Avatare, Countdown vor jedem Etappenstart.
+Einbettbares Website-Widget, das das Team **kette.kurve.kontext** (Startnummer
+**45A**, drei Fahrerinnen) „live" entlang der Etappenrouten eines Rennrad-
+Transalp-Rennens (Lienz → Riva, 7 Etappen) zeigt – im Stil der Strava-
+Streckenanimation. Karte (OpenStreetMap via Leaflet) mit **einem gemeinsamen
+Team-Avatar (Startnummer)**, Höhenprofil (SVG), aktuelle Live-Position, rechts
+ein **Fahrerinnen-Roster** (Panini-/Radrenn-Stil mit Länderflaggen), Countdown
+vor jedem Etappenstart.
 
 Die Bewegung wird aus den GPX-Routen simuliert (die GPX enthalten keine
 Zeitstempel): ein **steigungsabhängiges Tempomodell** (bergauf langsamer, bergab
 schneller) mit konfigurierbarem Etappenschnitt und leichten, reproduzierbaren
-Schwankungen. Das Dreierteam bleibt eng zusammen. Im Live-Betrieb läuft die
+Schwankungen. Das Team fährt als Einheit (ein Avatar). Im Live-Betrieb läuft die
 Anzeige **synchron zur echten Uhr**; ein eingebauter **Zeit-Simulator** erlaubt
 das Testen im Zeitraffer.
 
@@ -65,9 +68,12 @@ Alles Wesentliche liegt zentral in `js/config.js`:
 - **`defaultAvgKmh`** – bewegter Durchschnitt (Standard 22,5 km/h). Das Modell
   verteilt das Tempo steigungsabhängig und normalisiert den Etappenschnitt exakt
   auf diesen Wert.
-- **`riders`** – Namen, Farben und Emoji der drei Avatare.
-- **`group`** – `spreadMeters` (Abstand der Avatare) und `paceTimeJitter`
-  (gemeinsame Tempo-Schwankung).
+- **`team`** – Teamname, Startnummer (Bib auf der Karte) und Farbe.
+- **`roster`** – die drei Fahrerinnen für die rechte Roster-Spalte: `name` und
+  `flags` (Ländercodes wie `DE`, `US` → als kleine SVG-Flaggen dargestellt;
+  weitere Codes in `flagSVG()` in `js/widget.js` ergänzbar). Die Porträts sind
+  Platzhalter (CSS-Silhouette) – echte Fotos später leicht einsetzbar.
+- **`group`** – `paceTimeJitter` (sanfte, reproduzierbare Tempo-Schwankung).
 - **`sim`** – Voreinstellungen des Simulators.
 
 ### GPX austauschen
@@ -92,9 +98,9 @@ nichts weiter nötig – ohne `?sim=1` läuft alles an der realen Uhr.
 | `js/config.js` | Zentrale Konfiguration |
 | `js/gpx.js` | GPX laden & parsen (kumulative Distanz) |
 | `js/timing.js` | Steigungs-Tempomodell, Zeit/Distanz/Position-Interpolation |
-| `js/riders.js` | Fahrer-Positionen inkl. reproduzierbarer Gruppen-Schwankung |
+| `js/riders.js` | Team-Position inkl. reproduzierbarer Tempo-Schwankung |
 | `js/clock.js` | Uhr-Abstraktion (echt / virtuell) |
-| `js/map.js` | Leaflet-Karte, Route, Trail, Avatare |
+| `js/map.js` | Leaflet-Karte, Route, Trail, Team-Avatar (Bib) |
 | `js/elevation.js` | SVG-Höhenprofil mit Live-Marker |
 | `js/countdown.js` | Zeit-/Countdown-Formatierung |
 | `js/sim.js` | Zeit-Simulator-Bedienpanel |

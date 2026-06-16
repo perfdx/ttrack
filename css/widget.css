@@ -18,7 +18,7 @@ html, body { margin: 0; background: #0a0f15; }
 body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: var(--text); }
 
 .tt-widget {
-  max-width: 920px;
+  max-width: 1160px;
   margin: 16px auto;
   background: var(--bg);
   border: 1px solid var(--line);
@@ -32,7 +32,14 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
   display: flex; align-items: center; justify-content: space-between;
   padding: 12px 16px; background: var(--panel); border-bottom: 1px solid var(--line);
 }
-.tt-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; }
+.tt-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; flex-wrap: wrap; }
+.tt-team { display: inline-flex; align-items: center; gap: 7px; }
+.team-bib-sm {
+  background: var(--c); color: #fff; font-weight: 800; font-size: 12px;
+  padding: 2px 7px; border-radius: 4px; letter-spacing: 0.02em;
+  box-shadow: inset 0 0 0 1.5px rgba(255,255,255,0.55);
+}
+.team-name { font-size: 13px; color: var(--muted); font-weight: 600; }
 .badge {
   font-size: 11px; font-weight: 800; letter-spacing: 0.08em;
   padding: 3px 8px; border-radius: 999px; color: #001b0c;
@@ -61,20 +68,67 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
   padding: 2px 8px; border-radius: 999px;
 }
 
+/* ---- Body: Inhalt links, Roster rechts ---- */
+.tt-body { display: flex; align-items: stretch; }
+.tt-main { flex: 1 1 auto; min-width: 0; }
+.tt-roster {
+  flex: 0 0 220px; width: 220px; background: var(--panel2);
+  border-left: 1px solid var(--line); padding: 12px; overflow-y: auto;
+}
+
 /* ---- Karte ---- */
 .tt-mapwrap { position: relative; }
 #map { height: 360px; width: 100%; background: #1a2330; }
 .leaflet-container { background: #1a2330; }
 
-/* Fahrer-Avatare */
-.rider-marker { background: none; border: none; }
-.rider-pin {
-  width: 30px; height: 30px; border-radius: 50% 50% 50% 0;
-  background: var(--c); transform: rotate(-45deg);
+/* Team-Avatar: Startnummer (Bib) */
+.team-marker { background: none; border: none; }
+.team-bib {
+  min-width: 40px; height: 30px; padding: 0 6px;
+  background: var(--c); color: #fff; border-radius: 5px;
   display: flex; align-items: center; justify-content: center;
-  border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+  border: 2px solid #fff; box-shadow: 0 2px 7px rgba(0,0,0,0.55);
 }
-.rider-pin span { transform: rotate(45deg); font-size: 15px; line-height: 1; }
+.team-bib span { font-size: 15px; font-weight: 800; line-height: 1; letter-spacing: 0.02em; }
+
+/* ---- Fahrerinnen-Roster (Panini-Stil) ---- */
+.roster-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--line);
+}
+.roster-team { font-weight: 700; font-size: 13px; }
+.roster-num { background: var(--c); color: #fff; font-weight: 800; font-size: 12px; padding: 2px 7px; border-radius: 4px; }
+.rider-card {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(160deg, #223141, #1a2734);
+  border: 1px solid var(--line); border-radius: 10px;
+  padding: 8px; margin-bottom: 10px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.35);
+}
+.rc-portrait {
+  flex: 0 0 48px; width: 48px; height: 60px; border-radius: 6px;
+  background: radial-gradient(circle at 50% 35%, #3a4d62, #243240);
+  border: 1px solid var(--line); position: relative; overflow: hidden;
+  display: flex; align-items: flex-end; justify-content: center;
+}
+/* angedeutete Porträt-Silhouette (Platzhalter) */
+.rc-portrait::before {
+  content: ''; position: absolute; bottom: -14px; width: 34px; height: 34px;
+  background: #51647b; border-radius: 50%;
+}
+.rc-portrait::after {
+  content: ''; position: absolute; top: 9px; width: 18px; height: 18px;
+  background: #6b8099; border-radius: 50%;
+}
+.rc-initials {
+  position: relative; z-index: 1; font-size: 11px; font-weight: 800;
+  color: rgba(255,255,255,0.85); margin-bottom: 3px;
+}
+.rc-info { min-width: 0; }
+.rc-flags { display: flex; gap: 4px; margin-bottom: 3px; }
+.flag { width: 20px; height: auto; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); display: block; }
+.flag-txt { font-size: 10px; color: var(--muted); }
+.rc-name { font-size: 12.5px; font-weight: 600; line-height: 1.2; }
 
 /* ---- Overlay (Countdown / Status) ---- */
 .overlay {
@@ -148,6 +202,15 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 .sim-jump label { font-size: 12px; color: var(--muted); }
 
 /* ---- Responsive ---- */
+@media (max-width: 720px) {
+  .tt-body { flex-direction: column; }
+  .tt-roster {
+    flex: 0 0 auto; width: 100%; border-left: none; border-top: 1px solid var(--line);
+    display: flex; gap: 10px; overflow-x: auto;
+  }
+  .roster-head { display: none; }
+  .rider-card { flex: 0 0 200px; margin-bottom: 0; }
+}
 @media (max-width: 560px) {
   .tt-metrics { grid-template-columns: repeat(3, 1fr); }
   #map { height: 300px; }

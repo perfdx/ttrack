@@ -1,7 +1,10 @@
 // ===========================================================================
 // Kartendarstellung mit Leaflet (OpenStreetMap-Kacheln).
-// Strava-Look: gesamte Route blass, zurückgelegter Teil kräftig, 3 Avatare.
+// Strava-Look: gesamte Route blass, zurückgelegter Teil kräftig, ein
+// Team-Avatar (Startnummer/Bib).
 // ===========================================================================
+
+import { CONFIG } from './config.js';
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTR = '© OpenStreetMap';
@@ -14,7 +17,7 @@ export class MapView {
 
     this.fullLine = null;   // gesamte Route (blass)
     this.trailLine = null;  // zurückgelegter Teil (kräftig)
-    this.markers = [];      // Fahrer-Marker
+    this.teamMarker = null; // ein gemeinsamer Team-Avatar (Bib)
     this.startDot = null;
     this.finishDot = null;
     this.ds = null;         // downsampled {lat,lon,dist}
@@ -33,7 +36,7 @@ export class MapView {
     return { lat, lon, dist, n: lat.length };
   }
 
-  setTrack(track, riders) {
+  setTrack(track, pos) {
     this.ds = this._downsample(track);
     const latlngs = this.ds.lat.map((la, i) => [la, this.ds.lon[i]]);
 
@@ -41,8 +44,7 @@ export class MapView {
     if (this.trailLine) this.trailLine.remove();
     if (this.startDot) this.startDot.remove();
     if (this.finishDot) this.finishDot.remove();
-    this.markers.forEach((m) => m.remove());
-    this.markers = [];
+    if (this.teamMarker) this.teamMarker.remove();
 
     this.fullLine = L.polyline(latlngs, { color: '#3a6ea5', weight: 4, opacity: 0.35 }).addTo(this.map);
     this.trailLine = L.polyline([], { color: '#ff5a2b', weight: 5, opacity: 0.95 }).addTo(this.map);
@@ -51,28 +53,26 @@ export class MapView {
     this.startDot = L.circleMarker(a, { radius: 6, color: '#fff', weight: 2, fillColor: '#1faf5a', fillOpacity: 1 }).addTo(this.map).bindTooltip('Start');
     this.finishDot = L.circleMarker(b, { radius: 6, color: '#fff', weight: 2, fillColor: '#111', fillOpacity: 1 }).addTo(this.map).bindTooltip('Ziel');
 
-    // Fahrer-Marker (Avatare).
-    riders.forEach((r) => {
-      const icon = L.divIcon({
-        className: 'rider-marker',
-        html: `<div class="rider-pin" style="--c:${r.color}"><span>${r.emoji}</span></div>`,
-        iconSize: [34, 34], iconAnchor: [17, 17],
-      });
-      const m = L.marker(a, { icon, zIndexOffset: 1000 }).addTo(this.map).bindTooltip(r.name, { direction: 'top', offset: [0, -16] });
-      this.markers.push(m);
+    // Ein gemeinsamer Team-Avatar: Startnummer (Bib) in Teamfarbe.
+    const team = CONFIG.team;
+    const icon = L.divIcon({
+      className: 'team-marker',
+      html: `<div class="team-bib" style="--c:${team.color}"><span>${team.number}</span></div>`,
+      iconSize: [40, 30], iconAnchor: [20, 15],
     });
+    const start = pos ? [pos.lat, pos.lon] : a;
+    this.teamMarker = L.marker(start, { icon, zIndexOffset: 1000 }).addTo(this.map)
+      .bindTooltip(team.name, { direction: 'top', offset: [0, -16] });
 
     this.map.fitBounds(this.fullLine.getBounds(), { padding: [24, 24] });
   }
 
-  // Trail bis groupDist + Marker setzen. faint=true => Vorschaumodus (kein Trail).
-  update(groupDist, riders, faint = false) {
+  // Trail bis groupDist + Team-Marker setzen. faint=true => Vorschau (kein Trail).
+  update(groupDist, pos, faint = false) {
     if (!this.ds) return;
-    if (faint) {
-      this.trailLine.setLatLngs([]);
-      this.markers.forEach((m, i) => m.setLatLng([riders[i].lat, riders[i].lon]));
-      return;
-    }
+    if (pos) this.teamMarker.setLatLng([pos.lat, pos.lon]);
+    if (faint) { this.trailLine.setLatLngs([]); return; }
+
     const { lat, lon, dist, n } = this.ds;
     const pts = [];
     let i = 0;
@@ -84,7 +84,6 @@ export class MapView {
       pts.push([lat[i - 1] + f * (lat[i] - lat[i - 1]), lon[i - 1] + f * (lon[i] - lon[i - 1])]);
     }
     this.trailLine.setLatLngs(pts);
-    this.markers.forEach((m, idx) => m.setLatLng([riders[idx].lat, riders[idx].lon]));
   }
 
   invalidate() { this.map.invalidateSize(); }

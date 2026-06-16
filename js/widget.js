@@ -6,12 +6,24 @@
 import { CONFIG, stageStartMs, avgKmhFor } from './config.js';
 import { loadGpx } from './gpx.js';
 import { buildStageModel } from './timing.js';
-import { ridersAt } from './riders.js';
+import { teamAt } from './riders.js';
 import { Clock } from './clock.js';
 import { MapView } from './map.js';
 import { ElevationView } from './elevation.js';
 import { SimPanel } from './sim.js';
 import { fmtCountdown, fmtDuration, fmtStageTime } from './countdown.js';
+
+// Kleine Länderflaggen als inline-SVG (zuverlässig auch auf Windows, wo
+// Emoji-Flaggen nicht dargestellt werden). Erweiterbar per weiterer Codes.
+function flagSVG(code) {
+  const flags = {
+    DE: `<svg viewBox="0 0 5 3" class="flag" aria-label="Deutschland"><rect width="5" height="1" y="0" fill="#000"/><rect width="5" height="1" y="1" fill="#D00"/><rect width="5" height="1" y="2" fill="#FFCE00"/></svg>`,
+    US: `<svg viewBox="0 0 7 3" class="flag" aria-label="USA"><rect width="7" height="3" fill="#fff"/>` +
+        [0, 2, 4, 6, 8, 10, 12].map((i) => `<rect width="7" height="${(3 / 13).toFixed(3)}" y="${(i * 3 / 13).toFixed(3)}" fill="#B22234"/>`).join('') +
+        `<rect width="2.8" height="${(3 * 7 / 13).toFixed(3)}" fill="#3C3B6E"/></svg>`,
+  };
+  return flags[code] || `<span class="flag flag-txt">${code}</span>`;
+}
 
 class Widget {
   constructor() {
@@ -27,8 +39,10 @@ class Widget {
 
     this.$ = (id) => document.getElementById(id);
 
-    // Kopf
+    // Kopf: Titel + Teamname/Startnummer, Roster rechts.
     this.$('title').textContent = CONFIG.title;
+    this.renderTeam();
+    this.renderRoster();
 
     // Simulator über Zahnrad oder ?sim=1.
     this.$('gear').addEventListener('click', () => {
@@ -41,6 +55,38 @@ class Widget {
     setTimeout(() => this.map.invalidate(), 200);
 
     requestAnimationFrame(() => this.frame());
+  }
+
+  // Teamname + Startnummer (Bib) im Kopf.
+  renderTeam() {
+    const t = CONFIG.team;
+    const el = this.$('team');
+    if (!el) return;
+    el.innerHTML = `<span class="team-bib-sm" style="--c:${t.color}">${t.number}</span><span class="team-name">${t.name}</span>`;
+  }
+
+  // Roster der drei Fahrerinnen (Panini-/Radrenn-Stil) rechts.
+  renderRoster() {
+    const el = this.$('roster');
+    if (!el) return;
+    el.innerHTML = `
+      <div class="roster-head">
+        <span class="roster-team">${CONFIG.team.name}</span>
+        <span class="roster-num" style="--c:${CONFIG.team.color}">${CONFIG.team.number}</span>
+      </div>
+      ${CONFIG.roster.map((r) => {
+        const initials = r.name.replace(/^Dr\.?\s*/, '').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
+        const flags = r.flags.map(flagSVG).join('');
+        return `
+        <div class="rider-card">
+          <div class="rc-portrait"><span class="rc-initials">${initials}</span></div>
+          <div class="rc-info">
+            <div class="rc-flags">${flags}</div>
+            <div class="rc-name">${r.name}</div>
+          </div>
+        </div>`;
+      }).join('')}
+    `;
   }
 
   beginLoad(i) {
@@ -87,8 +133,8 @@ class Widget {
 
   ensureTrackShown(d) {
     if (this.shownIndex === d.index || !d.model) return;
-    const riders0 = ridersAt(d.model, 0).riders;
-    this.map.setTrack(d.model.track, riders0);
+    const team0 = teamAt(d.model, 0);
+    this.map.setTrack(d.model.track, team0);
     this.elev.setTrack(d.model.track);
     this.shownIndex = d.index;
     this.map.invalidate();
@@ -141,8 +187,8 @@ class Widget {
 
     if (d.mode === 'countdown') {
       // Vorschau (Route blass, Team an der Startlinie).
-      const r0 = ridersAt(d.model, 0);
-      this.map.update(0, r0.riders, true);
+      const t0 = teamAt(d.model, 0);
+      this.map.update(0, t0, true);
       this.elev.update(0, true);
 
       overlay.className = 'overlay show countdown';
@@ -168,17 +214,17 @@ class Widget {
 
     // ---- WÄHREND der Etappe -------------------------------------------------
     overlay.className = 'overlay';
-    const r = ridersAt(d.model, d.elapsed);
-    this.map.update(r.groupDist, r.riders, false);
-    this.elev.update(r.groupDist, false);
+    const t = teamAt(d.model, d.elapsed);
+    this.map.update(t.dist, t, false);
+    this.elev.update(t.dist, false);
 
     const remain = Math.max(0, d.model.duration - d.elapsed);
     this.setInfo({
       name: `Etappe ${stage.n}: ${stage.from} → ${stage.to}`,
       badge: simOn ? 'SIM-Fahrt' : 'LIVE',
-      done: r.groupDist / d.model.totalDist,
-      dist: r.groupDist, total: d.model.totalDist,
-      ele: r.ele, grade: r.gradePct, speed: r.speedKmh,
+      done: t.dist / d.model.totalDist,
+      dist: t.dist, total: d.model.totalDist,
+      ele: t.ele, grade: t.gradePct, speed: t.speedKmh,
       remain, arrival: this.arrivalStr(d.startMs, d.model.duration),
     });
   }

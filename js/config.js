@@ -31,18 +31,25 @@ export const CONFIG = {
     { n: 7, file: 'TT-2026 07 Lavarone-Riva_TRACK.gpx',       from: 'Lavarone',     to: 'Riva',         start: '2026-06-27T09:00:00+02:00' },
   ],
 
-  // Das Dreierteam. Namen/Farben/Emoji frei anpassbar.
-  riders: [
-    { name: 'Fahrer 1', color: '#e6492d', emoji: '🚴' },
-    { name: 'Fahrer 2', color: '#1f6fff', emoji: '🚵' },
-    { name: 'Fahrer 3', color: '#1faf5a', emoji: '🚴' },
+  // Das Team fährt als Einheit -> ein gemeinsamer Avatar (Startnummer) auf der
+  // Karte, Teamname/-farbe frei anpassbar.
+  team: {
+    name: 'kette.kurve.kontext',
+    number: '45A',
+    color: '#e6492d',
+  },
+
+  // Die drei Fahrerinnen für die Roster-Anzeige (Panini-/Radrenn-Stil).
+  // flags: Ländercodes (DE, US, …) -> als kleine Flaggen dargestellt.
+  roster: [
+    { name: 'Dr. Andrea Jeschke', flags: ['DE'] },
+    { name: 'Katja Mangold',      flags: ['DE'] },
+    { name: 'Tanja Smith',        flags: ['DE', 'US'] },
   ],
 
-  // Gruppenverhalten: Team bleibt eng zusammen, mit leichten zufälligen,
-  // aber reproduzierbaren (reload-stabilen) Abweichungen.
+  // Gruppenverhalten: leichte, reproduzierbare (reload-stabile) Tempo-Schwankung.
   group: {
-    spreadMeters: 9,     // max. Längsabstand der Avatare zueinander (enge Gruppe)
-    paceTimeJitter: 22,  // s: sanfte gemeinsame Tempo-Schwankung (Gruppe zusammen)
+    paceTimeJitter: 22,  // s: sanfte gemeinsame Tempo-Schwankung
   },
 
   // Simulator-Voreinstellungen (Test-Werkzeug für das Echtzeitverhalten).

@@ -20,35 +20,44 @@
       <div class="tt-title">
         <span id="title">TT-2026 · Transalp Live</span>
         <span id="status" class="badge live">LIVE</span>
+        <span id="team" class="tt-team"></span>
       </div>
       <button id="gear" title="Zeit-Simulator (Test)">⚙</button>
     </header>
 
-    <div class="tt-stage">
-      <span id="stage-name">—</span>
-      <span id="stage-badge" class="stage-badge">—</span>
-    </div>
+    <!-- Zwei Spalten: Inhalt links, Fahrerinnen-Roster rechts -->
+    <div class="tt-body">
+      <div class="tt-main">
+        <div class="tt-stage">
+          <span id="stage-name">—</span>
+          <span id="stage-badge" class="stage-badge">—</span>
+        </div>
 
-    <!-- Karte + Countdown/Status-Overlay -->
-    <div class="tt-mapwrap">
-      <div id="map"></div>
-      <div id="overlay" class="overlay"></div>
-    </div>
+        <!-- Karte + Countdown/Status-Overlay -->
+        <div class="tt-mapwrap">
+          <div id="map"></div>
+          <div id="overlay" class="overlay"></div>
+        </div>
 
-    <!-- Live-Kennzahlen -->
-    <div class="tt-metrics">
-      <div class="metric"><label>Distanz</label><span id="m-dist">– / – km</span></div>
-      <div class="metric"><label>Tempo</label><span id="m-speed">– km/h</span></div>
-      <div class="metric"><label>Höhe</label><span id="m-ele">– m</span></div>
-      <div class="metric"><label>Steigung</label><span id="m-grade">– %</span></div>
-      <div class="metric"><label>Restzeit</label><span id="m-remain">–</span></div>
-      <div class="metric"><label>Ankunft</label><span id="m-arrival">–</span></div>
-    </div>
-    <div class="tt-progress"><div class="tt-progress-bar"><span id="m-progress"></span></div><span id="m-pct" class="tt-pct">0 %</span></div>
+        <!-- Live-Kennzahlen -->
+        <div class="tt-metrics">
+          <div class="metric"><label>Distanz</label><span id="m-dist">– / – km</span></div>
+          <div class="metric"><label>Tempo</label><span id="m-speed">– km/h</span></div>
+          <div class="metric"><label>Höhe</label><span id="m-ele">– m</span></div>
+          <div class="metric"><label>Steigung</label><span id="m-grade">– %</span></div>
+          <div class="metric"><label>Restzeit</label><span id="m-remain">–</span></div>
+          <div class="metric"><label>Ankunft</label><span id="m-arrival">–</span></div>
+        </div>
+        <div class="tt-progress"><div class="tt-progress-bar"><span id="m-progress"></span></div><span id="m-pct" class="tt-pct">0 %</span></div>
 
-    <!-- Höhenprofil -->
-    <div class="tt-elevation">
-      <svg id="elevation"></svg>
+        <!-- Höhenprofil -->
+        <div class="tt-elevation">
+          <svg id="elevation"></svg>
+        </div>
+      </div>
+
+      <!-- Fahrerinnen-Roster (Panini-/Radrenn-Stil) -->
+      <aside id="roster" class="tt-roster"></aside>
     </div>
 
     <!-- Zeit-Simulator (Test-Werkzeug, normalerweise verborgen) -->
