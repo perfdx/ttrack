@@ -53,21 +53,25 @@ export class MapView {
     this.startDot = L.circleMarker(a, { radius: 6, color: '#fff', weight: 2, fillColor: '#1faf5a', fillOpacity: 1 }).addTo(this.map).bindTooltip('Start');
     this.finishDot = L.circleMarker(b, { radius: 6, color: '#fff', weight: 2, fillColor: '#111', fillOpacity: 1 }).addTo(this.map).bindTooltip('Ziel');
 
-    // Ein gemeinsamer Team-Avatar: Startnummer (Bib) in Teamfarbe.
+    // Gemeinsamer Team-Avatar: Gruppe aus drei leicht überlappenden Radtrikots.
     const team = CONFIG.team;
+    const jersey = (color) =>
+      `<svg class="team-jersey" viewBox="0 0 24 26" style="--j:${color}">
+         <path d="M6,5 L9,4 L12,6 L15,4 L18,5 L23,8 L20,12.5 L17.5,10.5 L17.5,24 L6.5,24 L6.5,10.5 L4,12.5 L1,8 Z"/>
+       </svg>`;
     const icon = L.divIcon({
       className: 'team-marker',
-      // Pulsierende Ringe hinter der Startnummer -> "Live-Standort"-Eindruck.
+      // Pulsierende Ringe hinter der Trikotgruppe -> "Live-Standort"-Eindruck.
       html: `<div class="team-avatar" style="--c:${team.color}">
                <span class="team-pulse"></span>
                <span class="team-pulse team-pulse-2"></span>
-               <div class="team-bib"><span>${team.number}</span></div>
+               <div class="team-jerseys">${team.jerseys.map(jersey).join('')}</div>
              </div>`,
-      iconSize: [40, 30], iconAnchor: [20, 15],
+      iconSize: [52, 30], iconAnchor: [26, 18],
     });
     const start = pos ? [pos.lat, pos.lon] : a;
     this.teamMarker = L.marker(start, { icon, zIndexOffset: 1000 }).addTo(this.map)
-      .bindTooltip(team.name, { direction: 'top', offset: [0, -16] });
+      .bindTooltip(`${team.name} · ${team.number}`, { direction: 'top', offset: [0, -16] });
 
     this.map.fitBounds(this.fullLine.getBounds(), { padding: [24, 24] });
   }

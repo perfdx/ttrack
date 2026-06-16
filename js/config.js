@@ -31,12 +31,13 @@ export const CONFIG = {
     { n: 7, file: 'TT-2026 07 Lavarone-Riva_TRACK.gpx',       from: 'Lavarone',     to: 'Riva',         start: '2026-06-27T09:00:00+02:00' },
   ],
 
-  // Das Team fährt als Einheit -> ein gemeinsamer Avatar (Startnummer) auf der
-  // Karte, Teamname/-farbe frei anpassbar.
+  // Das Team fährt als Einheit -> ein gemeinsamer Avatar auf der Karte
+  // (Gruppe aus drei Radtrikots). Teamname/-farbe/Trikotfarben frei anpassbar.
   team: {
     name: 'kette.kurve.kontext',
     number: '45A',
-    color: '#e6492d',
+    color: '#e6492d',                         // Pulsfarbe (Live-Effekt)
+    jerseys: ['#ffffff', '#f6a5c0', '#93c8f0'], // Trikots: Weiß / Rosa / Hellblau
   },
 
   // Die drei Fahrerinnen für die Roster-Anzeige (Panini-/Radrenn-Stil).
