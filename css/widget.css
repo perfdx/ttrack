@@ -297,6 +297,8 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
 
 /* ---- Responsive ---- */
 @media (max-width: 720px) {
+  /* randlos: kein grauer Rahmen oben/unten (full-bleed) */
+  .tt-widget { margin: 0; max-width: none; border: none; border-radius: 0; box-shadow: none; }
   .tt-body { flex-direction: column; }
   /* Roster unten vertikal gestapelt (kein Horizontal-Scroll) */
   .tt-roster {
