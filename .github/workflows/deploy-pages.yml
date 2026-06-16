@@ -32,12 +32,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure Pages
+        # Liest die Pages-Konfiguration. KEIN enablement: true, da der
+        # GITHUB_TOKEN in diesem Repo die Pages-Site nicht per API anlegen darf.
+        # GitHub Pages daher einmalig manuell aktivieren:
+        # Settings → Pages → Build and deployment → Source = "GitHub Actions".
         uses: actions/configure-pages@v5
-        with:
-          # Aktiviert GitHub Pages automatisch (Source = GitHub Actions),
-          # falls noch nicht geschehen. Schlägt dies fehl, einmalig manuell
-          # unter Settings → Pages einstellen.
-          enablement: true
 
       # Das gesamte Repo-Stammverzeichnis ist die Website (index.html liegt dort).
       - name: Upload artifact
