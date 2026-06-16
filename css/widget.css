@@ -326,5 +326,13 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
   .metric label { font-size: 9px; }
   .metric span { font-size: 12px; }   /* kompakter -> kein Umbruch */
   #map { height: 300px; }
-  .ov-timer { font-size: 32px; }
+  /* Countdown-Banner kompakter */
+  .ov-card { padding: 14px 16px; max-width: 320px; }
+  .ov-label { font-size: 11px; }
+  .ov-card h2 { font-size: 17px; margin: 4px 0 8px; }
+  .ov-stats { gap: 8px; font-size: 12px; margin-bottom: 6px; }
+  .ov-stats span { padding: 3px 8px; }
+  .ov-when { font-size: 12px; margin-bottom: 8px; }
+  .ov-timer { font-size: 28px; }
+  .ov-sub { font-size: 16px; }
 }
