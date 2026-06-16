@@ -83,7 +83,7 @@ class Widget {
     if (!el) return;
     el.innerHTML = `
       <div class="roster-head">
-        <span class="roster-team">${CONFIG.team.name}</span>
+        <a class="roster-team" href="${CONFIG.website}" target="_blank" rel="noopener noreferrer">${CONFIG.team.name}</a>
       </div>
       ${CONFIG.roster.map((r) => {
         const initials = r.name.replace(/^Dr\.?\s*/, '').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();

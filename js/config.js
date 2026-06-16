@@ -7,6 +7,9 @@ export const CONFIG = {
   // Untertitel neben dem Logo im Widget-Kopf.
   title: 'Tour Transalp 2026',
 
+  // Vereins-/Team-Website (Logo + Teamname verlinken hierauf, neuer Tab).
+  website: 'https://kette-kurve-kontext.onepage.me/',
+
   // Ordner mit den GPX-Dateien (relativ zu index.html).
   trackDir: 'trackfiles/',
 
