@@ -10,8 +10,6 @@
 @font-face { font-family: 'Poppins'; font-style: normal; font-weight: 700; font-display: swap; src: url('../assets/fonts/poppins-latin-700-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Poppins'; font-style: normal; font-weight: 800; font-display: swap; src: url('../assets/fonts/poppins-latin-800-normal.woff2') format('woff2'); }
 @font-face { font-family: 'Caveat'; font-style: normal; font-weight: 600; font-display: swap; src: url('../assets/fonts/caveat-latin-600-normal.woff2') format('woff2'); }
-/* Schmale Versalschrift für den Logo-Schriftzug (Roster-Überschrift) */
-@font-face { font-family: 'Barlow Condensed'; font-style: normal; font-weight: 500; font-display: swap; src: url('../assets/fonts/barlow-condensed-latin-500-normal.woff2') format('woff2'); }
 
 :root {
   --bg: #ffffff;       /* Karten-/Grundfläche */
@@ -135,9 +133,7 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
   margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--line);
 }
 .roster-team {
-  font-family: 'Barlow Condensed', 'Poppins', sans-serif;
-  text-transform: uppercase; letter-spacing: 0.06em;
-  font-weight: 500; font-size: 17px; color: var(--text);
+  font-weight: 500; font-size: 12px; color: var(--muted);
 }
 .rider-card {
   position: relative; overflow: hidden;
