@@ -216,7 +216,7 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
 }
 .metric { background: var(--panel); padding: 8px 10px; }
 .metric label { display: block; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); }
-.metric span { font-size: 15px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.metric span { font-size: 14px; font-weight: 500; color: #4a555f; font-variant-numeric: tabular-nums; white-space: nowrap; }
 
 .tt-progress { display: flex; align-items: center; gap: 10px; padding: 8px 16px; background: var(--panel); }
 .tt-progress-bar { flex: 1; height: 7px; background: var(--panel2); border-radius: 999px; overflow: hidden; }
@@ -305,6 +305,9 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
 }
 @media (max-width: 560px) {
   .tt-metrics { grid-template-columns: repeat(3, 1fr); }
+  .metric { padding: 7px 8px; }
+  .metric label { font-size: 9px; }
+  .metric span { font-size: 12px; }   /* kompakter -> kein Umbruch */
   #map { height: 300px; }
   .ov-timer { font-size: 32px; }
 }
