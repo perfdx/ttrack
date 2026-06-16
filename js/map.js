@@ -46,8 +46,8 @@ export class MapView {
     if (this.finishDot) this.finishDot.remove();
     if (this.teamMarker) this.teamMarker.remove();
 
-    this.fullLine = L.polyline(latlngs, { color: '#3a6ea5', weight: 4, opacity: 0.35 }).addTo(this.map);
-    this.trailLine = L.polyline([], { color: '#ff5a2b', weight: 5, opacity: 0.95 }).addTo(this.map);
+    this.fullLine = L.polyline(latlngs, { color: '#1b5376', weight: 4, opacity: 0.45 }).addTo(this.map);
+    this.trailLine = L.polyline([], { color: '#d36f2e', weight: 5, opacity: 0.97 }).addTo(this.map);
 
     const a = latlngs[0], b = latlngs[latlngs.length - 1];
     this.startDot = L.circleMarker(a, { radius: 6, color: '#fff', weight: 2, fillColor: '#1faf5a', fillOpacity: 1 }).addTo(this.map).bindTooltip('Start');

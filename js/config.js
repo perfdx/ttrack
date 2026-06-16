@@ -4,8 +4,8 @@
 // ===========================================================================
 
 export const CONFIG = {
-  // Titel im Widget-Kopf.
-  title: 'TT-2026 · Transalp Live',
+  // Untertitel neben dem Logo im Widget-Kopf.
+  title: 'Transalp 2026 · Live',
 
   // Ordner mit den GPX-Dateien (relativ zu index.html).
   trackDir: 'trackfiles/',
@@ -35,7 +35,7 @@ export const CONFIG = {
   // (Gruppe aus drei Radtrikots). Teamname/-farbe/Trikotfarben frei anpassbar.
   team: {
     name: 'kette.kurve.kontext',
-    color: '#e6492d',                         // Pulsfarbe (Live-Effekt)
+    color: '#d36f2e',                         // Pulsfarbe (Terracotta, Marken-Akzent)
     jerseys: ['#ffffff', '#f6a5c0', '#93c8f0'], // Trikots: Weiß / Rosa / Hellblau
   },
 
