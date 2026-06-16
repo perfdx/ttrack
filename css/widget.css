@@ -244,7 +244,9 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
 .rs-chip {
   flex: 1 1 0; min-width: 0;
   display: flex; align-items: center; gap: 7px;
-  background: rgba(16, 24, 34, 0.78); border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(18, 26, 36, 0.5);
+  -webkit-backdrop-filter: blur(5px); backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 10px; padding: 5px 7px;
 }
 .rs-portrait {
@@ -274,12 +276,13 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
   .rider-card { width: 100%; margin-bottom: 10px; }
   .rider-card:last-child { margin-bottom: 0; }
 
-  /* Fahrerinnen-Strip als Overlay am unteren Kartenrand einblenden */
+  /* Fahrerinnen-Strip als Overlay einblenden, etwas oberhalb des
+     Kartenrands (über der Leaflet/OSM-Attribution). Kein eigener
+     Hintergrund -> die transluzenten Chips lassen die Karte durchscheinen. */
   .tt-rider-strip {
     display: flex; gap: 6px;
-    position: absolute; left: 0; right: 0; bottom: 0; z-index: 650;
-    padding: 7px; pointer-events: none;
-    background: linear-gradient(to top, rgba(8, 12, 18, 0.85), rgba(8, 12, 18, 0));
+    position: absolute; left: 0; right: 0; bottom: 22px; z-index: 650;
+    padding: 0 7px; pointer-events: none;
   }
   /* … aber nicht, solange das Overlay (Countdown/Lädt/Ende) sichtbar ist */
   #overlay.show ~ .tt-rider-strip { display: none; }
