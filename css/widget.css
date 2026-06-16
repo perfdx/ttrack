@@ -106,10 +106,16 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
   box-shadow: 0 1px 4px rgba(0,0,0,0.35);
 }
 .rc-portrait {
-  flex: 0 0 48px; width: 48px; height: 60px; border-radius: 6px;
+  flex: 0 0 54px; width: 54px; height: 68px; border-radius: 6px;
   background: radial-gradient(circle at 50% 35%, #3a4d62, #243240);
   border: 1px solid var(--line); position: relative; overflow: hidden;
   display: flex; align-items: flex-end; justify-content: center;
+}
+/* Porträtfoto füllt den Platzhalter (ggf. beschnitten) und liegt über der
+   Silhouette/Initialen (die nur als Fallback ohne Foto sichtbar bleiben). */
+.rc-photo {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; object-position: center top; z-index: 2;
 }
 /* angedeutete Porträt-Silhouette (Platzhalter) */
 .rc-portrait::before {

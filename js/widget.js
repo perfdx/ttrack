@@ -77,9 +77,14 @@ class Widget {
       ${CONFIG.roster.map((r) => {
         const initials = r.name.replace(/^Dr\.?\s*/, '').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
         const flags = r.flags.map(flagSVG).join('');
+        // Foto füllend einpassen (object-fit: cover); bei fehlender Datei
+        // wird das <img> entfernt -> Silhouette/Initialen als Fallback.
+        const photo = r.photo
+          ? `<img class="rc-photo" src="${r.photo}" alt="${r.name}" loading="lazy" style="object-position:${r.focus || 'center top'}" onerror="this.remove()">`
+          : '';
         return `
         <div class="rider-card">
-          <div class="rc-portrait"><span class="rc-initials">${initials}</span></div>
+          <div class="rc-portrait">${photo}<span class="rc-initials">${initials}</span></div>
           <div class="rc-info">
             <div class="rc-flags">${flags}</div>
             <div class="rc-name">${r.name}</div>

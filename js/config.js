@@ -41,10 +41,11 @@ export const CONFIG = {
 
   // Die drei Fahrerinnen für die Roster-Anzeige (Panini-/Radrenn-Stil).
   // flags: Ländercodes (DE, US, …) -> als kleine Flaggen dargestellt.
+  // photo: Pfad zum Porträtfoto (optional); focus: Bildausschnitt (object-position).
   roster: [
-    { name: 'Dr. Andrea Jeschke', flags: ['DE'] },
-    { name: 'Katja Mangold',      flags: ['DE'] },
-    { name: 'Tanja Smith',        flags: ['DE', 'US'] },
+    { name: 'Dr. Andrea Jeschke', flags: ['DE'],       photo: 'assets/riders/andrea.png', focus: 'center 25%' },
+    { name: 'Katja Mangold',      flags: ['DE'],        photo: 'assets/riders/katja.png',  focus: 'center 30%' },
+    { name: 'Tanja Smith',        flags: ['DE', 'US'],  photo: 'assets/riders/tanja.png',  focus: 'center 28%' },
   ],
 
   // Gruppenverhalten: leichte, reproduzierbare (reload-stabile) Tempo-Schwankung.
