@@ -46,7 +46,7 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
   padding: 12px 16px; background: var(--panel); border-bottom: 1px solid var(--line);
 }
 .tt-title { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 15px; flex-wrap: wrap; }
-.tt-logo { height: 34px; width: auto; display: block; }
+.tt-logo { height: 54px; width: auto; display: block; }
 #title { color: var(--navy); font-weight: 600; font-size: 14px; }
 .tt-team { display: inline-flex; align-items: center; gap: 7px; }
 .team-name { font-size: 13px; color: var(--muted); font-weight: 600; }
@@ -305,6 +305,7 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
   #overlay.show ~ .tt-rider-strip { display: none; }
 }
 @media (max-width: 560px) {
+  .tt-logo { height: 46px; }
   .tt-metrics { grid-template-columns: repeat(3, 1fr); }
   .metric { padding: 7px 8px; }
   .metric label { font-size: 9px; }
