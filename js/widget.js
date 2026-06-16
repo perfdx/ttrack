@@ -18,9 +18,9 @@ import { fmtCountdown, fmtDuration, fmtStageTime } from './countdown.js';
 function flagSVG(code) {
   const flags = {
     DE: `<svg viewBox="0 0 5 3" class="flag" aria-label="Deutschland"><rect width="5" height="1" y="0" fill="#000"/><rect width="5" height="1" y="1" fill="#D00"/><rect width="5" height="1" y="2" fill="#FFCE00"/></svg>`,
-    US: `<svg viewBox="0 0 7 3" class="flag" aria-label="USA"><rect width="7" height="3" fill="#fff"/>` +
-        [0, 2, 4, 6, 8, 10, 12].map((i) => `<rect width="7" height="${(3 / 13).toFixed(3)}" y="${(i * 3 / 13).toFixed(3)}" fill="#B22234"/>`).join('') +
-        `<rect width="2.8" height="${(3 * 7 / 13).toFixed(3)}" fill="#3C3B6E"/></svg>`,
+    US: `<svg viewBox="0 0 19 10" class="flag" aria-label="USA"><rect width="19" height="10" fill="#fff"/>` +
+        [0, 2, 4, 6, 8, 10, 12].map((i) => `<rect width="19" height="${(10 / 13).toFixed(3)}" y="${(i * 10 / 13).toFixed(3)}" fill="#B22234"/>`).join('') +
+        `<rect width="7.6" height="${(10 * 7 / 13).toFixed(3)}" fill="#3C3B6E"/></svg>`,
   };
   return flags[code] || `<span class="flag flag-txt">${code}</span>`;
 }

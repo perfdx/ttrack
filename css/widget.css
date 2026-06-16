@@ -185,7 +185,7 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
 }
 .rc-info { min-width: 0; }
 .rc-flags { display: flex; align-items: center; gap: 5px; margin-bottom: 3px; }
-.flag { width: 20px; height: auto; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); display: block; }
+.flag { height: 12px; width: auto; border-radius: 2px; box-shadow: 0 0 0 1px rgba(0,0,0,0.4); display: block; }
 .flag-txt { font-size: 10px; color: var(--muted); }
 .rc-name { font-size: 12.5px; font-weight: 600; line-height: 1.2; }
 /* Strava-/Instagram-Icons dezent unter dem Namen */
@@ -291,7 +291,7 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
 .rs-initials { font-size: 10px; font-weight: 800; color: rgba(255, 255, 255, 0.85); }
 .rs-info { min-width: 0; line-height: 1.25; }
 .rs-flags { display: flex; align-items: center; gap: 4px; }
-.rs-flags .flag { width: 16px; }
+.rs-flags .flag { height: 10px; width: auto; }
 .rs-num { font-size: 10.5px; font-weight: 800; color: var(--navy); font-variant-numeric: tabular-nums; }
 .rs-name { font-size: 12px; font-weight: 700; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
