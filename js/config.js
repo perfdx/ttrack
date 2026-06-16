@@ -34,7 +34,7 @@ export const CONFIG = {
   // Das Team fährt als Einheit -> ein gemeinsamer Avatar auf der Karte
   // (Gruppe aus drei Radtrikots). Teamname/-farbe/Trikotfarben frei anpassbar.
   team: {
-    name: 'kette.kurve.kontext',
+    name: 'TEAM KETTE.KURVE.KONTEXT',
     color: '#d36f2e',                         // Pulsfarbe (Terracotta, Marken-Akzent)
     jerseys: ['#ffffff', '#f6a5c0', '#93c8f0'], // Trikots: Weiß / Rosa / Hellblau
   },
