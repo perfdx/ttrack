@@ -209,7 +209,7 @@ class Widget {
 
     if (d.mode === 'finished') {
       overlay.className = 'overlay show';
-      overlay.innerHTML = `<div class="ov-card"><h2>🏁 Transalp beendet</h2><p>Alle ${CONFIG.stages.length} Etappen gefahren. Chapeau!</p></div>`;
+      overlay.innerHTML = `<div class="ov-card"><h2>🏁 Tour Transalp 2026 beendet</h2><p>Alle ${CONFIG.stages.length} Etappen gefahren. Chapeau!</p></div>`;
       this.setInfo({ name: 'TT-2026 Transalp', badge: 'Ziel', done: 1, dist: 0, total: 0, ele: 0, grade: 0, speed: 0, remain: 0, arrival: '' });
       return;
     }

@@ -5,7 +5,7 @@
 
 export const CONFIG = {
   // Untertitel neben dem Logo im Widget-Kopf.
-  title: 'Transalp 2026 · Live',
+  title: 'Tour Transalp 2026',
 
   // Ordner mit den GPX-Dateien (relativ zu index.html).
   trackDir: 'trackfiles/',
