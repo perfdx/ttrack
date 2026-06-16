@@ -281,6 +281,8 @@ body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; co
     padding: 7px; pointer-events: none;
     background: linear-gradient(to top, rgba(8, 12, 18, 0.85), rgba(8, 12, 18, 0));
   }
+  /* … aber nicht, solange das Overlay (Countdown/Lädt/Ende) sichtbar ist */
+  #overlay.show ~ .tt-rider-strip { display: none; }
 }
 @media (max-width: 560px) {
   .tt-metrics { grid-template-columns: repeat(3, 1fr); }
