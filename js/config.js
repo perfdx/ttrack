@@ -31,21 +31,22 @@ export const CONFIG = {
     { n: 7, file: 'TT-2026 07 Lavarone-Riva_TRACK.gpx',       from: 'Lavarone',     to: 'Riva',         start: '2026-06-27T09:00:00+02:00' },
   ],
 
-  // Das Team fährt als Einheit -> ein gemeinsamer Avatar (Startnummer) auf der
-  // Karte, Teamname/-farbe frei anpassbar.
+  // Das Team fährt als Einheit -> ein gemeinsamer Avatar auf der Karte
+  // (Gruppe aus drei Radtrikots). Teamname/-farbe/Trikotfarben frei anpassbar.
   team: {
     name: 'kette.kurve.kontext',
-    number: '45A',
-    color: '#e6492d',
+    color: '#e6492d',                         // Pulsfarbe (Live-Effekt)
+    jerseys: ['#ffffff', '#f6a5c0', '#93c8f0'], // Trikots: Weiß / Rosa / Hellblau
   },
 
   // Die drei Fahrerinnen für die Roster-Anzeige (Panini-/Radrenn-Stil).
   // flags: Ländercodes (DE, US, …) -> als kleine Flaggen dargestellt.
   // photo: Pfad zum Porträtfoto (optional); focus: Bildausschnitt (object-position).
+  // number: Startnummer; color: Trikotfarbe der Fahrerin.
   roster: [
-    { name: 'Dr. Andrea Jeschke', flags: ['DE'],       photo: 'assets/riders/andrea.png', focus: 'center 25%' },
-    { name: 'Katja Mangold',      flags: ['DE'],        photo: 'assets/riders/katja.png',  focus: 'center 30%' },
-    { name: 'Tanja Smith',        flags: ['DE', 'US'],  photo: 'assets/riders/tanja.png',  focus: 'center 28%' },
+    { name: 'Dr. Andrea Jeschke', flags: ['DE'],       number: '45B', color: '#ffffff', photo: 'assets/riders/andrea.png', focus: 'center 25%' },
+    { name: 'Katja Mangold',      flags: ['DE'],        number: '45A', color: '#f6a5c0', photo: 'assets/riders/katja.png',  focus: 'center 30%' },
+    { name: 'Tanja Smith',        flags: ['DE', 'US'],  number: '796', color: '#93c8f0', photo: 'assets/riders/tanja.png',  focus: 'center 28%' },
   ],
 
   // Gruppenverhalten: leichte, reproduzierbare (reload-stabile) Tempo-Schwankung.

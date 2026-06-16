@@ -62,7 +62,7 @@ class Widget {
     const t = CONFIG.team;
     const el = this.$('team');
     if (!el) return;
-    el.innerHTML = `<span class="team-bib-sm" style="--c:${t.color}">${t.number}</span><span class="team-name">${t.name}</span>`;
+    el.innerHTML = `<span class="team-name">${t.name}</span>`;
   }
 
   // Roster der drei Fahrerinnen (Panini-/Radrenn-Stil) rechts.
@@ -72,7 +72,6 @@ class Widget {
     el.innerHTML = `
       <div class="roster-head">
         <span class="roster-team">${CONFIG.team.name}</span>
-        <span class="roster-num" style="--c:${CONFIG.team.color}">${CONFIG.team.number}</span>
       </div>
       ${CONFIG.roster.map((r) => {
         const initials = r.name.replace(/^Dr\.?\s*/, '').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
@@ -82,11 +81,15 @@ class Widget {
         const photo = r.photo
           ? `<img class="rc-photo" src="${r.photo}" alt="${r.name}" loading="lazy" style="object-position:${r.focus || 'center top'}" onerror="this.remove()">`
           : '';
+        // Startnummer dezent, rechts neben den Flaggen, mit Hashtag.
+        const number = r.number ? `<span class="rc-number">#${r.number}</span>` : '';
+        // Dezenter Trikotfarben-Streifen am linken Rand (--jersey).
+        const stripe = r.color ? ` style="--jersey:${r.color}"` : '';
         return `
-        <div class="rider-card">
+        <div class="rider-card"${stripe}>
           <div class="rc-portrait">${photo}<span class="rc-initials">${initials}</span></div>
           <div class="rc-info">
-            <div class="rc-flags">${flags}</div>
+            <div class="rc-flags">${flags}${number}</div>
             <div class="rc-name">${r.name}</div>
           </div>
         </div>`;
