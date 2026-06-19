@@ -61,7 +61,7 @@ export class Map3DView {
     // Kamera-Parameter (per URL fein justierbar: ?cz=Zoom &cpitch=Pitch &cpad=0..0.5).
     const q = new URLSearchParams(location.search);
     const num = (k, d) => { const v = parseFloat(q.get(k)); return Number.isFinite(v) ? v : d; };
-    this._camZoom = num('cz', 13);
+    this._camZoom = num('cz', 10);
     this._camPitch = num('cpitch', 62);
     this._camPadFrac = Math.max(-0.5, Math.min(0.5, num('cpad', 0.45)));
 
@@ -174,7 +174,10 @@ export class Map3DView {
         const ll = this.marker && this.marker.getLngLat();
         if (ll && this.map.queryTerrainElevation) elev = this.map.queryTerrainElevation(ll);
       } catch (e) { /* ignore */ }
-      if ((elev != null && elev > 0) || performance.now() - t0 > 5000) {
+      const dt = performance.now() - t0;
+      // Nicht zu früh stoppen: erst ab ~2 s (auch wenn das DEM früh einen groben
+      // Wert liefert), spätestens nach ~5 s -> Marker sicher auf Geländehöhe.
+      if ((dt > 2000 && elev != null && elev > 0) || dt > 5000) {
         clearInterval(this._stabilizeTimer); this._stabilizeTimer = null;
       }
     }, 250);
@@ -247,16 +250,23 @@ export class Map3DView {
       const diff = ((brg - this._bearing + 540) % 360) - 180; // kürzeste Differenz
       this._bearing = (this._bearing + diff * 0.35 + 360) % 360; // glätten
     }
-    const h = (this.map.getContainer && this.map.getContainer().clientHeight) || 360;
-    const pad = Math.round(h * Math.abs(this._camPadFrac));
-    const padding = this._camPadFrac >= 0
-      ? { top: pad, bottom: 0, left: 0, right: 0 }   // Avatar tiefer (Strecke voraus oben)
-      : { top: 0, bottom: pad, left: 0, right: 0 };  // Avatar höher
+    const cont = this.map.getContainer && this.map.getContainer();
+    const h = (cont && cont.clientHeight) || 360;
+    const w = (cont && cont.clientWidth) || 1000;
+    // Auf Mobile unten Platz für den Fahrerinnen-Strip reservieren, damit der
+    // Avatar darüber sitzt und nicht verdeckt wird.
+    const stripReserve = w <= 720 ? 96 : 0;
+    const padAbs = Math.round(h * Math.abs(this._camPadFrac));
+    let top = this._camPadFrac >= 0 ? padAbs : 0;
+    let bottom = (this._camPadFrac < 0 ? padAbs : 0) + stripReserve;
+    // Sicherstellen, dass genug sichtbarer Bereich übrig bleibt.
+    const maxPad = Math.max(0, h - 50);
+    if (top + bottom > maxPad) top = Math.max(0, maxPad - bottom);
     this.map.easeTo({
       center: [pos.lon, pos.lat],
       bearing: this._bearing,
       pitch: this._camPitch, zoom: this._camZoom,
-      padding,
+      padding: { top, bottom, left: 0, right: 0 },
       duration: 400, essential: true,
     });
   }
