@@ -43,6 +43,7 @@ class Widget {
     // 3D-Ansicht (MapLibre, Relive-Stil) optional via ?map=3d; sonst 2D (Leaflet).
     const use3d = new URLSearchParams(location.search).get('map') === '3d';
     this.map = use3d ? new Map3DView('map') : new MapView('map');
+    if (use3d) document.getElementById('tt-widget').classList.add('is-3d');
     this.elev = new ElevationView(document.getElementById('elevation'));
     this.sim = new SimPanel(this.clock, document.getElementById('sim-panel'), () => {});
 

@@ -83,7 +83,7 @@ export class Map3DView {
       style,
       center: [12.0, 46.5],
       zoom: 9, pitch: 60, bearing: 0, maxPitch: 80,
-      attributionControl: true,
+      attributionControl: { compact: true },
     });
     this.map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
 
@@ -167,9 +167,10 @@ export class Map3DView {
   }
 
   // Gekippte, gethrottelte Kameraverfolgung in Fahrtrichtung.
+  // Avatar sitzt im unteren Bilddrittel (padding), Strecke voraus oben sichtbar.
   _follow(pos, groupDist) {
     const now = performance.now();
-    if (now - this._lastCamMs < 650) return;
+    if (now - this._lastCamMs < 220) return;
     this._lastCamMs = now;
 
     const ahead = this._pointAhead(groupDist, 200) || pos;
@@ -179,7 +180,14 @@ export class Map3DView {
       const diff = ((brg - this._bearing + 540) % 360) - 180; // kürzeste Differenz
       this._bearing = (this._bearing + diff * 0.35 + 360) % 360; // glätten
     }
-    this.map.easeTo({ center: [pos.lon, pos.lat], bearing: this._bearing, pitch: 66, zoom: 13.5, duration: 900, essential: true });
+    const h = (this.map.getContainer && this.map.getContainer().clientHeight) || 360;
+    this.map.easeTo({
+      center: [pos.lon, pos.lat],
+      bearing: this._bearing,
+      pitch: 62, zoom: 13,
+      padding: { top: Math.round(h * 0.45), bottom: 0, left: 0, right: 0 },
+      duration: 400, essential: true,
+    });
   }
 
   _pointAhead(groupDist, meters) {
