@@ -14,6 +14,11 @@ const MAPLIBRE_CSS = 'https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplib
 const SAT_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
 const DEM_TILES = 'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png';
 
+// Kostenlose Vektor-Labels (OpenFreeMap, OpenMapTiles-Schema, kein API-Key) für
+// dezente Gipfel-/Pass-Beschriftung über dem Satellitenbild.
+const OFM_TILES = 'https://tiles.openfreemap.org/planet';
+const OFM_GLYPHS = 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf';
+
 let _loaderPromise = null;
 function loadMapLibre() {
   if (window.maplibregl) return Promise.resolve();
@@ -64,6 +69,9 @@ export class Map3DView {
     this._camZoom = num('cz', 10);
     this._camPitch = num('cpitch', 62);
     this._camPadFrac = Math.max(-0.5, Math.min(0.5, num('cpad', 0.45)));
+    // Gipfel-/Pass-Labels (?labels=0 zum Abschalten, ?peakmin= Höhenschwelle in m).
+    this._showLabels = q.get('labels') !== '0';
+    this._peakMin = num('peakmin', 1500);
 
     loadMapLibre().then(() => this._init()).catch((err) => {
       console.error(err);
@@ -76,10 +84,11 @@ export class Map3DView {
     if (this._destroyed) return;
     const style = {
       version: 8,
-      glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+      glyphs: this._showLabels ? OFM_GLYPHS : 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
       sources: {
         sat: { type: 'raster', tiles: [SAT_TILES], tileSize: 256, maxzoom: 19, attribution: '© Esri, Maxar, Earthstar Geographics' },
         dem: { type: 'raster-dem', tiles: [DEM_TILES], tileSize: 256, maxzoom: 15, encoding: 'terrarium', attribution: 'Terrain: AWS Terrain Tiles' },
+        ...(this._showLabels ? { omt: { type: 'vector', url: OFM_TILES, attribution: '© OpenStreetMap, OpenFreeMap' } } : {}),
       },
       layers: [
         { id: 'sat', type: 'raster', source: 'sat' },
@@ -115,6 +124,8 @@ export class Map3DView {
       this.map.addLayer({ id: 'trail', type: 'line', source: 'trail',
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: { 'line-color': '#d36f2e', 'line-width': 5 } });
+
+      if (this._showLabels) this._addPeakLabels();
 
       this.marker = new maplibregl.Marker({ element: teamAvatarElement(this.team) })
         .setLngLat([12.0, 46.5]).addTo(this.map);
@@ -181,6 +192,36 @@ export class Map3DView {
         clearInterval(this._stabilizeTimer); this._stabilizeTimer = null;
       }
     }, 250);
+  }
+
+  // Dezente Gipfel-/Pass-Beschriftung (OpenFreeMap 'mountain_peak'-Ebene).
+  _addPeakLabels() {
+    try {
+      const filter = ['all', ['has', 'name'], ['>=', ['to-number', ['get', 'ele']], this._peakMin]];
+      this.map.addLayer({
+        id: 'peak-dot', type: 'circle', source: 'omt', 'source-layer': 'mountain_peak',
+        minzoom: 8, filter,
+        paint: {
+          'circle-radius': 2.6, 'circle-color': '#ffffff',
+          'circle-stroke-color': '#1b5376', 'circle-stroke-width': 1.2, 'circle-opacity': 0.9,
+        },
+      });
+      this.map.addLayer({
+        id: 'peak-label', type: 'symbol', source: 'omt', 'source-layer': 'mountain_peak',
+        minzoom: 8, filter,
+        layout: {
+          'text-field': ['coalesce', ['get', 'name:de'], ['get', 'name']],
+          'text-font': ['Noto Sans Regular'],
+          'text-size': 11, 'text-anchor': 'top', 'text-offset': [0, 0.5],
+          'text-optional': true,
+          'symbol-sort-key': ['-', 9000, ['to-number', ['get', 'ele']]],
+        },
+        paint: {
+          'text-color': '#ffffff', 'text-halo-color': 'rgba(15,25,35,0.85)',
+          'text-halo-width': 1.4, 'text-opacity': 0.92,
+        },
+      });
+    } catch (e) { console.warn('Gipfel-Labels nicht verfügbar:', e); }
   }
 
   _line(coordinates) {
