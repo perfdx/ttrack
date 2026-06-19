@@ -8,7 +8,7 @@ export const CONFIG = {
   title: 'Tour Transalp 2026',
 
   // Vereins-/Team-Website (Logo + Teamname verlinken hierauf, neuer Tab).
-  website: 'https://kette-kurve-kontext.onepage.me/',
+  website: 'https://www.instagram.com/kette.kurve.kontext',
 
   // Ordner mit den GPX-Dateien (relativ zu index.html).
   trackDir: 'trackfiles/',
