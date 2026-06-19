@@ -340,6 +340,16 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
   #tt-widget.is-3d .tt-rider-strip { bottom: 36px; }
   /* … aber nicht, solange das Overlay (Countdown/Lädt/Ende) sichtbar ist */
   #overlay.show ~ .tt-rider-strip { display: none; }
+
+  /* Touch-freundliche Social-Buttons in den Fahrerinnen-Kacheln */
+  .rc-social { gap: 12px; margin-top: 8px; }
+  .rc-soc {
+    width: 40px; height: 40px; align-items: center; justify-content: center;
+    border: 1px solid var(--line); border-radius: 10px; background: #fff;
+  }
+  .rc-soc svg { width: 20px; height: 20px; }
+  .rc-soc.soc-strava:active { color: #fc4c02; }
+  .rc-soc.soc-ig:active { color: #e1306c; }
 }
 @media (max-width: 560px) {
   .tt-logo { height: 46px; }

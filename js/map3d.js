@@ -14,6 +14,11 @@ const MAPLIBRE_CSS = 'https://cdn.jsdelivr.net/npm/maplibre-gl@4.7.1/dist/maplib
 const SAT_TILES = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
 const DEM_TILES = 'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png';
 
+// Kostenlose Vektor-Labels (OpenFreeMap, OpenMapTiles-Schema, kein API-Key) für
+// dezente Gipfel-/Pass-Beschriftung über dem Satellitenbild.
+const OFM_TILES = 'https://tiles.openfreemap.org/planet';
+const OFM_GLYPHS = 'https://tiles.openfreemap.org/fonts/{fontstack}/{range}.pbf';
+
 let _loaderPromise = null;
 function loadMapLibre() {
   if (window.maplibregl) return Promise.resolve();
@@ -42,6 +47,48 @@ function bearing(lat1, lon1, lat2, lon2) {
   return (Math.atan2(y, x) * toD + 360) % 360;
 }
 
+// Markante Pässe/Gipfel der Route aus dem Höhenprofil ableiten (topografische
+// Prominenz). track: {lat,lon,ele,dist,count}. Liefert [{lat,lon,ele,km,prom}].
+function detectSummits(track, minProm = 150, minGapM = 2000, maxCount = 8) {
+  const { ele, dist, lat, lon, count: n } = track;
+  if (!n || n < 3) return [];
+  // Lokale Maxima über ein kleines Fenster (gegen GPX-Rauschen).
+  const W = 6;
+  const maxima = [];
+  for (let i = 1; i < n - 1; i++) {
+    let isMax = ele[i] >= ele[i - 1] && ele[i] >= ele[i + 1];
+    if (!isMax) continue;
+    for (let k = Math.max(0, i - W); k <= Math.min(n - 1, i + W); k++) {
+      if (ele[k] > ele[i]) { isMax = false; break; }
+    }
+    if (isMax) maxima.push(i);
+  }
+  // Prominenz: Höhe minus höchstem Sattel zur jeweils höheren Umgebung.
+  const cand = [];
+  for (const i of maxima) {
+    const h = ele[i];
+    let leftMin = h;
+    for (let j = i - 1; j >= 0 && ele[j] < h; j--) if (ele[j] < leftMin) leftMin = ele[j];
+    let rightMin = h;
+    for (let j = i + 1; j < n && ele[j] < h; j++) if (ele[j] < rightMin) rightMin = ele[j];
+    cand.push({ i, h, prom: Math.min(h - leftMin, h - rightMin) });
+  }
+  // Schwelle + nahe Duplikate zusammenfassen (höhere Prominenz gewinnt).
+  let kept = cand.filter((c) => c.prom >= minProm).sort((a, b) => dist[a.i] - dist[b.i]);
+  const merged = [];
+  for (const c of kept) {
+    const last = merged[merged.length - 1];
+    if (last && Math.abs(dist[c.i] - dist[last.i]) < minGapM) {
+      if (c.prom > last.prom) merged[merged.length - 1] = c;
+    } else merged.push(c);
+  }
+  // Auf die prominentesten begrenzen, dann nach Strecke sortiert zurückgeben.
+  merged.sort((a, b) => b.prom - a.prom);
+  return merged.slice(0, maxCount)
+    .sort((a, b) => dist[a.i] - dist[b.i])
+    .map((c) => ({ lat: lat[c.i], lon: lon[c.i], ele: ele[c.i], km: dist[c.i] / 1000, prom: c.prom }));
+}
+
 export class Map3DView {
   constructor(elId) {
     this.elId = elId;
@@ -64,6 +111,13 @@ export class Map3DView {
     this._camZoom = num('cz', 10);
     this._camPitch = num('cpitch', 62);
     this._camPadFrac = Math.max(-0.5, Math.min(0.5, num('cpad', 0.45)));
+    // Gipfel-/Pass-Labels (?labels=0 zum Abschalten, ?peakmin= Höhenschwelle in m).
+    this._showLabels = q.get('labels') !== '0';
+    this._peakMin = num('peakmin', 1500);
+    // Pass-/Gipfel-Marker auf der Route (?summits=0 aus, ?prom= Prominenzschwelle).
+    this._showSummits = q.get('summits') !== '0';
+    this._prom = num('prom', 150);
+    this._stage = null;
 
     loadMapLibre().then(() => this._init()).catch((err) => {
       console.error(err);
@@ -76,10 +130,11 @@ export class Map3DView {
     if (this._destroyed) return;
     const style = {
       version: 8,
-      glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+      glyphs: OFM_GLYPHS,
       sources: {
         sat: { type: 'raster', tiles: [SAT_TILES], tileSize: 256, maxzoom: 19, attribution: '© Esri, Maxar, Earthstar Geographics' },
         dem: { type: 'raster-dem', tiles: [DEM_TILES], tileSize: 256, maxzoom: 15, encoding: 'terrarium', attribution: 'Terrain: AWS Terrain Tiles' },
+        ...(this._showLabels ? { omt: { type: 'vector', url: OFM_TILES, attribution: '© OpenStreetMap, OpenFreeMap' } } : {}),
       },
       layers: [
         { id: 'sat', type: 'raster', source: 'sat' },
@@ -116,6 +171,9 @@ export class Map3DView {
         layout: { 'line-join': 'round', 'line-cap': 'round' },
         paint: { 'line-color': '#d36f2e', 'line-width': 5 } });
 
+      if (this._showLabels) this._addPeakLabels();
+      if (this._showSummits) this._addSummitLayers();
+
       this.marker = new maplibregl.Marker({ element: teamAvatarElement(this.team) })
         .setLngLat([12.0, 46.5]).addTo(this.map);
 
@@ -124,7 +182,7 @@ export class Map3DView {
       setTimeout(() => this._collapseAttribution(), 600);
 
       this.ready = true;
-      if (this._pendingTrack) { const { track, pos } = this._pendingTrack; this._pendingTrack = null; this.setTrack(track, pos); }
+      if (this._pendingTrack) { const { track, pos, stage } = this._pendingTrack; this._pendingTrack = null; this.setTrack(track, pos, stage); }
       if (this._lastUpdate) { const u = this._lastUpdate; this.update(u.groupDist, u.pos, u.faint); }
 
       // Follow-Cam erst starten, wenn die Karte einmal still steht (Terrain/Tiles
@@ -183,6 +241,82 @@ export class Map3DView {
     }, 250);
   }
 
+  // Dezente Gipfel-/Pass-Beschriftung (OpenFreeMap 'mountain_peak'-Ebene).
+  _addPeakLabels() {
+    try {
+      const filter = ['all', ['has', 'name'], ['>=', ['to-number', ['get', 'ele']], this._peakMin]];
+      this.map.addLayer({
+        id: 'peak-dot', type: 'circle', source: 'omt', 'source-layer': 'mountain_peak',
+        minzoom: 8, filter,
+        paint: {
+          'circle-radius': 2.6, 'circle-color': '#ffffff',
+          'circle-stroke-color': '#1b5376', 'circle-stroke-width': 1.2, 'circle-opacity': 0.9,
+        },
+      });
+      this.map.addLayer({
+        id: 'peak-label', type: 'symbol', source: 'omt', 'source-layer': 'mountain_peak',
+        minzoom: 8, filter,
+        layout: {
+          'text-field': ['coalesce', ['get', 'name:de'], ['get', 'name']],
+          'text-font': ['Noto Sans Regular'],
+          'text-size': 11, 'text-anchor': 'top', 'text-offset': [0, 0.5],
+          'text-optional': true,
+          'symbol-sort-key': ['-', 9000, ['to-number', ['get', 'ele']]],
+        },
+        paint: {
+          'text-color': '#ffffff', 'text-halo-color': 'rgba(15,25,35,0.85)',
+          'text-halo-width': 1.4, 'text-opacity': 0.92,
+        },
+      });
+    } catch (e) { console.warn('Gipfel-Labels nicht verfügbar:', e); }
+  }
+
+  // Marker + Beschriftung für die Pässe/Gipfel der Route (Terracotta).
+  _addSummitLayers() {
+    try {
+      this.map.addSource('summits', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+      this.map.addLayer({
+        id: 'summit-dot', type: 'circle', source: 'summits',
+        paint: { 'circle-radius': 4, 'circle-color': '#d36f2e', 'circle-stroke-color': '#ffffff', 'circle-stroke-width': 1.6 },
+      });
+      this.map.addLayer({
+        id: 'summit-label', type: 'symbol', source: 'summits',
+        layout: {
+          'text-field': ['get', 'label'], 'text-font': ['Noto Sans Regular'],
+          'text-size': 12, 'text-anchor': 'bottom', 'text-offset': [0, -0.8],
+          'symbol-sort-key': ['-', 0, ['get', 'ele']], 'text-padding': 4,
+        },
+        paint: {
+          'text-color': '#ffffff', 'text-halo-color': 'rgba(20,30,40,0.92)',
+          'text-halo-width': 1.7, 'text-opacity': 0.96,
+        },
+      });
+    } catch (e) { console.warn('Summit-Layer nicht verfügbar:', e); }
+  }
+
+  // Summits aus dem aktuellen Track berechnen und in die Quelle schreiben.
+  _updateSummits() {
+    if (!this._showSummits || !this.ds_track) return;
+    const src = this.map.getSource('summits');
+    if (!src) return;
+    const peaks = detectSummits(this.ds_track, this._prom);
+    const named = (this._stage && Array.isArray(this._stage.peaks)) ? this._stage.peaks : [];
+    const features = peaks.map((p) => {
+      const h = Math.round(p.ele);
+      // Namen per km-Nähe zuordnen (Toleranz 2 km).
+      let name = '';
+      let best = 2.0;
+      for (const np of named) {
+        if (typeof np.km !== 'number') continue;
+        const d = Math.abs(np.km - p.km);
+        if (d < best) { best = d; name = np.name; }
+      }
+      const label = name ? `${name} · ${h} m` : `${h} m`;
+      return { type: 'Feature', geometry: { type: 'Point', coordinates: [p.lon, p.lat] }, properties: { label, ele: h } };
+    });
+    src.setData({ type: 'FeatureCollection', features });
+  }
+
   _line(coordinates) {
     return { type: 'Feature', geometry: { type: 'LineString', coordinates }, properties: {} };
   }
@@ -195,14 +329,17 @@ export class Map3DView {
     return { lat, lon, dist, n: lat.length };
   }
 
-  setTrack(track, pos) {
-    if (!this.ready) { this._pendingTrack = { track, pos }; return; }
+  setTrack(track, pos, stage) {
+    if (!this.ready) { this._pendingTrack = { track, pos, stage }; return; }
     this.ds = this._downsample(track);
+    this.ds_track = track;          // volle Auflösung für Summit-Erkennung
+    this._stage = stage || null;
     const coords = this.ds.lat.map((la, i) => [this.ds.lon[i], la]); // [lng,lat]
     this.map.getSource('route').setData(this._line(coords));
     this.map.getSource('trail').setData(this._line([]));
     const start = pos ? [pos.lon, pos.lat] : coords[0];
     if (this.marker) this.marker.setLngLat(start);
+    this._updateSummits();
     this._fitRoute(coords);
     this._bearingInit = false;
   }
