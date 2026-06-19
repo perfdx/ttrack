@@ -8,7 +8,7 @@ export const CONFIG = {
   title: 'Tour Transalp 2026',
 
   // Vereins-/Team-Website (Logo + Teamname verlinken hierauf, neuer Tab).
-  website: 'https://www.instagram.com/kette.kurve.kontext',
+  website: 'https://kette-kurve-kontext.onepage.me/',
 
   // Ordner mit den GPX-Dateien (relativ zu index.html).
   trackDir: 'trackfiles/',
@@ -24,8 +24,6 @@ export const CONFIG = {
   defaultAvgKmh: 22.5,
 
   // Die sieben Etappen in Reihenfolge.
-  // Optional je Etappe: peaks: [{ name: 'Passo X', km: 42 }] -> beschriftet die
-  // automatisch erkannten Pass-/Gipfel-Marker (3D) per Distanz (km) mit Namen.
   stages: [
     { n: 1, file: 'TT-2026 01 Lienz-Sillian_TRACK.gpx',       from: 'Lienz',        to: 'Sillian',      start: '2026-06-21T09:00:00+02:00' },
     { n: 2, file: 'TT-2026 02 Sillian-Falcade_TRACK.gpx',     from: 'Sillian',      to: 'Falcade',      start: '2026-06-22T09:00:00+02:00' },
