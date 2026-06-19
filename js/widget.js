@@ -223,7 +223,7 @@ class Widget {
   ensureTrackShown(d) {
     if (this.shownIndex === d.index || !d.model) return;
     const team0 = teamAt(d.model, 0);
-    this.map.setTrack(d.model.track, team0);
+    this.map.setTrack(d.model.track, team0, d.model.stage);
     this.elev.setTrack(d.model.track);
     this.shownIndex = d.index;
     this.map.invalidate();

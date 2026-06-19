@@ -24,6 +24,8 @@ export const CONFIG = {
   defaultAvgKmh: 22.5,
 
   // Die sieben Etappen in Reihenfolge.
+  // Optional je Etappe: peaks: [{ name: 'Passo X', km: 42 }] -> beschriftet die
+  // automatisch erkannten Pass-/Gipfel-Marker (3D) per Distanz (km) mit Namen.
   stages: [
     { n: 1, file: 'TT-2026 01 Lienz-Sillian_TRACK.gpx',       from: 'Lienz',        to: 'Sillian',      start: '2026-06-21T09:00:00+02:00' },
     { n: 2, file: 'TT-2026 02 Sillian-Falcade_TRACK.gpx',     from: 'Sillian',      to: 'Falcade',      start: '2026-06-22T09:00:00+02:00' },
