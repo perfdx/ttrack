@@ -69,6 +69,21 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
 }
 #gear:hover { background: #e9eef2; }
 
+/* Rechte Kopf-Steuerung: 2D/3D-Umschalter + (versteckter) Zahnrad-Button */
+.tt-controls { display: flex; align-items: center; gap: 8px; }
+.map-toggle {
+  display: inline-flex; background: #fff;
+  border: 1px solid var(--line); border-radius: 999px; overflow: hidden;
+}
+.map-toggle button {
+  border: none; background: transparent; color: var(--muted);
+  font: 700 12px/1 'Poppins', system-ui, sans-serif; letter-spacing: 0.02em;
+  padding: 6px 12px; cursor: pointer;
+}
+.map-toggle button + button { border-left: 1px solid var(--line); }
+.map-toggle button.active { background: var(--navy); color: #fff; }
+.map-toggle button:not(.active):hover { background: #eef2f6; color: var(--navy); }
+
 /* ---- Etappenzeile ---- */
 .tt-stage {
   display: flex; align-items: center; gap: 8px; justify-content: space-between;
@@ -321,6 +336,8 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
     position: absolute; left: 0; right: 0; bottom: 22px; z-index: 650;
     padding: 0 7px; pointer-events: none;
   }
+  /* 3D-Modus: höher setzen, damit der MapLibre-Attributions-Button nicht überlappt */
+  #tt-widget.is-3d .tt-rider-strip { bottom: 36px; }
   /* … aber nicht, solange das Overlay (Countdown/Lädt/Ende) sichtbar ist */
   #overlay.show ~ .tt-rider-strip { display: none; }
 }

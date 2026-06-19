@@ -25,7 +25,13 @@
         <span id="title">Tour Transalp 2026</span>
         <span id="status" class="badge live">LIVE</span>
       </div>
-      <button id="gear" title="Zeit-Simulator (Test)" hidden>⚙</button>
+      <div class="tt-controls">
+        <div id="map-toggle" class="map-toggle" role="group" aria-label="Kartenansicht 2D oder 3D">
+          <button type="button" data-mode="2d" aria-label="2D-Karte">2D</button>
+          <button type="button" data-mode="3d" aria-label="3D-Karte">3D</button>
+        </div>
+        <button id="gear" title="Zeit-Simulator (Test)" hidden>⚙</button>
+      </div>
     </header>
 
     <!-- Zwei Spalten: Inhalt links, Fahrerinnen-Roster rechts -->
