@@ -110,6 +110,10 @@ export class Map3DView {
       this.marker = new maplibregl.Marker({ element: teamAvatarElement(this.team) })
         .setLngLat([12.0, 46.5]).addTo(this.map);
 
+      // Attributions-Badge standardmäßig eingeklappt (nur kleines "i").
+      this._collapseAttribution();
+      setTimeout(() => this._collapseAttribution(), 600);
+
       this.ready = true;
       if (this._pendingTrack) { const { track, pos } = this._pendingTrack; this._pendingTrack = null; this.setTrack(track, pos); }
       if (this._lastUpdate) { const u = this._lastUpdate; this.update(u.groupDist, u.pos, u.faint); }
@@ -199,6 +203,17 @@ export class Map3DView {
     const j = Math.min(i + 1, n - 1);
     const d0 = dist[i], d1 = dist[j], f = d1 > d0 ? (target - d0) / (d1 - d0) : 0;
     return { lat: lat[i] + f * (lat[j] - lat[i]), lon: lon[i] + f * (lon[j] - lon[i]) };
+  }
+
+  // MapLibre rendert das kompakte Attributions-<details> initial aufgeklappt;
+  // hier einklappen, sodass nur das kleine "i" sichtbar ist (Klick öffnet wieder).
+  _collapseAttribution() {
+    if (!this.map || this._destroyed) return;
+    const c = this.map.getContainer && this.map.getContainer();
+    const a = c && c.querySelector('.maplibregl-ctrl-attrib');
+    if (!a) return;
+    a.classList.remove('maplibregl-compact-show');
+    if (a.tagName === 'DETAILS') a.open = false;
   }
 
   invalidate() { if (this.map && this.ready) this.map.resize(); }
