@@ -5,6 +5,7 @@
 // ===========================================================================
 
 import { CONFIG } from './config.js';
+import { teamAvatarMarkup } from './avatar.js';
 
 const TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 const TILE_ATTR = '© OpenStreetMap';
@@ -55,18 +56,9 @@ export class MapView {
 
     // Gemeinsamer Team-Avatar: Gruppe aus drei leicht überlappenden Radtrikots.
     const team = CONFIG.team;
-    const jersey = (color) =>
-      `<svg class="team-jersey" viewBox="0 0 24 26" style="--j:${color}">
-         <path d="M6,5 L9,4 L12,6 L15,4 L18,5 L23,8 L20,12.5 L17.5,10.5 L17.5,24 L6.5,24 L6.5,10.5 L4,12.5 L1,8 Z"/>
-       </svg>`;
     const icon = L.divIcon({
       className: 'team-marker',
-      // Pulsierende Ringe hinter der Trikotgruppe -> "Live-Standort"-Eindruck.
-      html: `<div class="team-avatar" style="--c:${team.color}">
-               <span class="team-pulse"></span>
-               <span class="team-pulse team-pulse-2"></span>
-               <div class="team-jerseys">${team.jerseys.map(jersey).join('')}</div>
-             </div>`,
+      html: teamAvatarMarkup(team),
       iconSize: [52, 30], iconAnchor: [26, 18],
     });
     const start = pos ? [pos.lat, pos.lon] : a;

@@ -9,6 +9,7 @@ import { buildStageModel } from './timing.js';
 import { teamAt } from './riders.js';
 import { Clock } from './clock.js';
 import { MapView } from './map.js';
+import { Map3DView } from './map3d.js';
 import { ElevationView } from './elevation.js';
 import { SimPanel } from './sim.js';
 import { fmtCountdown, fmtDuration, fmtStageTime } from './countdown.js';
@@ -39,7 +40,9 @@ function socialLinks(r) {
 class Widget {
   constructor() {
     this.clock = new Clock();
-    this.map = new MapView('map');
+    // 3D-Ansicht (MapLibre, Relive-Stil) optional via ?map=3d; sonst 2D (Leaflet).
+    const use3d = new URLSearchParams(location.search).get('map') === '3d';
+    this.map = use3d ? new Map3DView('map') : new MapView('map');
     this.elev = new ElevationView(document.getElementById('elevation'));
     this.sim = new SimPanel(this.clock, document.getElementById('sim-panel'), () => {});
 
