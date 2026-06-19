@@ -56,6 +56,14 @@ export class Map3DView {
     this._bearing = 0;
     this._bearingInit = false;
     this._followStarted = false; // Follow-Cam erst nach 'idle' (Terrain geladen)
+    this._stabilizeTimer = null;
+
+    // Kamera-Parameter (per URL fein justierbar: ?cz=Zoom &cpitch=Pitch &cpad=0..0.5).
+    const q = new URLSearchParams(location.search);
+    const num = (k, d) => { const v = parseFloat(q.get(k)); return Number.isFinite(v) ? v : d; };
+    this._camZoom = num('cz', 13);
+    this._camPitch = num('cpitch', 62);
+    this._camPadFrac = Math.max(-0.5, Math.min(0.5, num('cpad', 0.45)));
 
     loadMapLibre().then(() => this._init()).catch((err) => {
       console.error(err);
@@ -133,7 +141,43 @@ export class Map3DView {
       };
       this.map.once('idle', startFollow);
       setTimeout(startFollow, 2500); // Sicherheitsnetz, falls 'idle' ausbleibt
+
+      // Stabilisierung: solange das DEM noch lädt, wird der Marker gegen
+      // Elevation 0 (Meereshöhe) projiziert -> er sitzt zu tief. Bis das Terrain
+      // am Avatar geladen ist, Marker neu setzen + neu rendern + Kamera nachziehen
+      // (ersetzt das manuelle Mausrad-Scrollen).
+      this._startStabilize();
+      this.map.on('sourcedata', (e) => {
+        if (e && e.sourceId === 'dem' && e.isSourceLoaded) this._stabilizeOnce();
+      });
     });
+  }
+
+  _stabilizeOnce() {
+    if (!this.map || this._destroyed) return;
+    if (this.marker) this.marker.setLngLat(this.marker.getLngLat());
+    this._lastCamMs = 0;
+    if (this._followStarted && this._lastUpdate && !this._lastUpdate.faint) {
+      this._follow(this._lastUpdate.pos, this._lastUpdate.groupDist);
+    }
+    try { this.map.triggerRepaint(); } catch (e) { /* ignore */ }
+  }
+
+  _startStabilize() {
+    const t0 = performance.now();
+    this._stabilizeTimer = setInterval(() => {
+      if (this._destroyed || !this.map) { clearInterval(this._stabilizeTimer); return; }
+      this._stabilizeOnce();
+      // Stoppen, sobald Terrain am Avatar geladen ist oder nach ~5 s.
+      let elev = null;
+      try {
+        const ll = this.marker && this.marker.getLngLat();
+        if (ll && this.map.queryTerrainElevation) elev = this.map.queryTerrainElevation(ll);
+      } catch (e) { /* ignore */ }
+      if ((elev != null && elev > 0) || performance.now() - t0 > 5000) {
+        clearInterval(this._stabilizeTimer); this._stabilizeTimer = null;
+      }
+    }, 250);
   }
 
   _line(coordinates) {
@@ -204,11 +248,15 @@ export class Map3DView {
       this._bearing = (this._bearing + diff * 0.35 + 360) % 360; // glätten
     }
     const h = (this.map.getContainer && this.map.getContainer().clientHeight) || 360;
+    const pad = Math.round(h * Math.abs(this._camPadFrac));
+    const padding = this._camPadFrac >= 0
+      ? { top: pad, bottom: 0, left: 0, right: 0 }   // Avatar tiefer (Strecke voraus oben)
+      : { top: 0, bottom: pad, left: 0, right: 0 };  // Avatar höher
     this.map.easeTo({
       center: [pos.lon, pos.lat],
       bearing: this._bearing,
-      pitch: 62, zoom: 13,
-      padding: { top: Math.round(h * 0.45), bottom: 0, left: 0, right: 0 },
+      pitch: this._camPitch, zoom: this._camZoom,
+      padding,
       duration: 400, essential: true,
     });
   }
@@ -238,6 +286,7 @@ export class Map3DView {
   // Aufräumen für den Wechsel der Karten-Engine (2D <-> 3D).
   destroy() {
     this._destroyed = true;
+    if (this._stabilizeTimer) { clearInterval(this._stabilizeTimer); this._stabilizeTimer = null; }
     try { if (this.map) this.map.remove(); } catch (e) { /* ignore */ }
     this.map = null; this.marker = null; this.ready = false;
     const el = document.getElementById(this.elId);
