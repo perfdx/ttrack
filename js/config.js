@@ -48,7 +48,7 @@ export const CONFIG = {
   // number: Startnummer; color: Trikotfarbe der Fahrerin.
   // strava/instagram: Profil-Links (leer = Icon dezent ausgegraut, kein Link).
   roster: [
-    { name: 'Dr. Andrea Jeschke', flags: ['DE'],       number: '45B', color: '#ffffff', photo: 'assets/riders/andrea.png', focus: 'center 25%', strava: '', instagram: '' },
+    { name: 'Dr. Andrea Jeschke', flags: ['DE'],       number: '45B', color: '#ffffff', photo: 'assets/riders/andrea.png', focus: 'center 25%', strava: 'https://www.strava.com/athletes/3635893', instagram: 'https://www.instagram.com/rennrad_liebe/' },
     { name: 'Katja Mangold',      flags: ['DE'],        number: '45A', color: '#f6a5c0', photo: 'assets/riders/katja.png',  focus: 'center 30%', strava: '', instagram: '' },
     { name: 'Tanja Smith',        flags: ['DE', 'US'],  number: '796', color: '#93c8f0', photo: 'assets/riders/tanja.png',  focus: 'center 28%', strava: '', instagram: '' },
   ],
