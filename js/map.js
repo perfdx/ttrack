@@ -12,6 +12,7 @@ const TILE_ATTR = '© OpenStreetMap';
 
 export class MapView {
   constructor(elId) {
+    this.elId = elId;
     this.map = L.map(elId, { zoomControl: true, preferCanvas: true, attributionControl: true });
     L.tileLayer(TILE_URL, { maxZoom: 18, attribution: TILE_ATTR }).addTo(this.map);
     this.map.setView([46.5, 12.0], 9);
@@ -87,5 +88,13 @@ export class MapView {
     this.trailLine.setLatLngs(pts);
   }
 
-  invalidate() { this.map.invalidateSize(); }
+  invalidate() { if (this.map) this.map.invalidateSize(); }
+
+  // Aufräumen für den Wechsel der Karten-Engine (2D <-> 3D).
+  destroy() {
+    try { if (this.map) this.map.remove(); } catch (e) { /* ignore */ }
+    this.map = null;
+    const el = document.getElementById(this.elId);
+    if (el) { el.innerHTML = ''; el.removeAttribute('style'); el.className = ''; }
+  }
 }

@@ -40,10 +40,11 @@ function socialLinks(r) {
 class Widget {
   constructor() {
     this.clock = new Clock();
-    // 3D-Ansicht (MapLibre, Relive-Stil) optional via ?map=3d; sonst 2D (Leaflet).
-    const use3d = new URLSearchParams(location.search).get('map') === '3d';
-    this.map = use3d ? new Map3DView('map') : new MapView('map');
-    if (use3d) document.getElementById('tt-widget').classList.add('is-3d');
+    // Karten-Engine: 2D (Leaflet, Standard) oder 3D (MapLibre, Relive-Stil).
+    // Initial aus ?map=3d; zur Laufzeit über den 2D/3D-Umschalter wechselbar.
+    this._use3d = new URLSearchParams(location.search).get('map') === '3d';
+    this.map = this._use3d ? new Map3DView('map') : new MapView('map');
+    document.getElementById('tt-widget').classList.toggle('is-3d', this._use3d);
     this.elev = new ElevationView(document.getElementById('elevation'));
     this.sim = new SimPanel(this.clock, document.getElementById('sim-panel'), () => {});
 
@@ -59,6 +60,7 @@ class Widget {
     this.renderTeam();
     this.renderRoster();
     this.renderRiderStrip();
+    this.wireMapToggle();
 
     // Zeit-Simulator nur im Test-/Dev-Modus erreichbar (URL-Parameter):
     //   ?sim      -> Zahnrad-Button sichtbar (Simulator manuell öffnen)
@@ -86,6 +88,38 @@ class Widget {
     const el = this.$('team');
     if (!el) return;
     el.innerHTML = `<span class="team-name">${t.name}</span>`;
+  }
+
+  // 2D/3D-Umschalter im Kopf verdrahten.
+  wireMapToggle() {
+    const el = this.$('map-toggle');
+    if (!el) return;
+    el.querySelectorAll('button').forEach((b) =>
+      b.addEventListener('click', () => this.setMapMode(b.dataset.mode === '3d')));
+    this._updateMapToggle();
+  }
+
+  _updateMapToggle() {
+    const el = this.$('map-toggle');
+    if (!el) return;
+    el.querySelectorAll('button').forEach((b) =>
+      b.classList.toggle('active', (b.dataset.mode === '3d') === this._use3d));
+  }
+
+  // Karten-Engine zur Laufzeit wechseln (Leaflet 2D <-> MapLibre 3D).
+  setMapMode(use3d) {
+    if (use3d === this._use3d) return;
+    this._use3d = use3d;
+    if (this.map && this.map.destroy) this.map.destroy();
+    this.map = use3d ? new Map3DView('map') : new MapView('map');
+    document.getElementById('tt-widget').classList.toggle('is-3d', use3d);
+    this.shownIndex = null;                      // erzwingt setTrack im nächsten Frame
+    setTimeout(() => this.map.invalidate(), 60);
+    this._updateMapToggle();
+    // Auswahl in der URL spiegeln (ohne Reload, teilbar/persistent).
+    const url = new URL(location.href);
+    if (use3d) url.searchParams.set('map', '3d'); else url.searchParams.delete('map');
+    history.replaceState(null, '', url);
   }
 
   // Roster der drei Fahrerinnen (Panini-/Radrenn-Stil) rechts.

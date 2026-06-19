@@ -64,6 +64,7 @@ export class Map3DView {
   }
 
   _init() {
+    if (this._destroyed) return;
     const style = {
       version: 8,
       glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
@@ -88,6 +89,7 @@ export class Map3DView {
     this.map.addControl(new maplibregl.NavigationControl({ visualizePitch: true }), 'top-right');
 
     this.map.on('load', () => {
+      if (this._destroyed) return;
       try { this.map.setTerrain({ source: 'dem', exaggeration: 1.3 }); } catch (e) { /* in style */ }
       try {
         this.map.setSky({
@@ -199,5 +201,14 @@ export class Map3DView {
     return { lat: lat[i] + f * (lat[j] - lat[i]), lon: lon[i] + f * (lon[j] - lon[i]) };
   }
 
-  invalidate() { if (this.map) this.map.resize(); }
+  invalidate() { if (this.map && this.ready) this.map.resize(); }
+
+  // Aufräumen für den Wechsel der Karten-Engine (2D <-> 3D).
+  destroy() {
+    this._destroyed = true;
+    try { if (this.map) this.map.remove(); } catch (e) { /* ignore */ }
+    this.map = null; this.marker = null; this.ready = false;
+    const el = document.getElementById(this.elId);
+    if (el) { el.innerHTML = ''; el.removeAttribute('style'); el.className = ''; }
+  }
 }
