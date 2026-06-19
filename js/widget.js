@@ -56,12 +56,19 @@ class Widget {
     this.renderRoster();
     this.renderRiderStrip();
 
-    // Simulator über Zahnrad oder ?sim=1.
-    this.$('gear').addEventListener('click', () => {
-      this.sim.visible ? (this.clock.setReal(), this.sim.hide()) : this.sim.activate();
-    });
+    // Zeit-Simulator nur im Test-/Dev-Modus erreichbar (URL-Parameter):
+    //   ?sim      -> Zahnrad-Button sichtbar (Simulator manuell öffnen)
+    //   ?sim=1    -> Zahnrad sichtbar + Simulator automatisch geöffnet
+    // Normale Besucher sehen die reine Live-Ansicht ohne Zahnrad-Button.
     const params = new URLSearchParams(location.search);
-    if (params.get('sim') === '1') this.sim.activate();
+    if (params.has('sim')) {
+      const gear = this.$('gear');
+      gear.hidden = false;
+      gear.addEventListener('click', () => {
+        this.sim.visible ? (this.clock.setReal(), this.sim.hide()) : this.sim.activate();
+      });
+      if (params.get('sim') === '1') this.sim.activate();
+    }
 
     // Layout-Korrektur für Leaflet nach dem ersten Frame.
     setTimeout(() => this.map.invalidate(), 200);
