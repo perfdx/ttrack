@@ -55,6 +55,7 @@ export class Map3DView {
     this._lastCamMs = 0;
     this._bearing = 0;
     this._bearingInit = false;
+    this._followStarted = false; // Follow-Cam erst nach 'idle' (Terrain geladen)
 
     loadMapLibre().then(() => this._init()).catch((err) => {
       console.error(err);
@@ -117,6 +118,21 @@ export class Map3DView {
       this.ready = true;
       if (this._pendingTrack) { const { track, pos } = this._pendingTrack; this._pendingTrack = null; this.setTrack(track, pos); }
       if (this._lastUpdate) { const u = this._lastUpdate; this.update(u.groupDist, u.pos, u.faint); }
+
+      // Follow-Cam erst starten, wenn die Karte einmal still steht (Terrain/Tiles
+      // geladen). Bis dahin bleibt die gekippte Übersicht stehen (Avatar auf der
+      // Route sichtbar); danach zoomt die Kamera korrekt heran -> kein „Avatar
+      // out of frame" mehr beim initialen 3D-Aufbau.
+      let started = false;
+      const startFollow = () => {
+        if (started || this._destroyed) return;
+        started = true;
+        this._followStarted = true;
+        this._lastCamMs = 0;
+        if (this._lastUpdate && !this._lastUpdate.faint) this._follow(this._lastUpdate.pos, this._lastUpdate.groupDist);
+      };
+      this.map.once('idle', startFollow);
+      setTimeout(startFollow, 2500); // Sicherheitsnetz, falls 'idle' ausbleibt
     });
   }
 
@@ -175,6 +191,7 @@ export class Map3DView {
   // Gekippte, gethrottelte Kameraverfolgung in Fahrtrichtung.
   // Avatar sitzt im unteren Bilddrittel (padding), Strecke voraus oben sichtbar.
   _follow(pos, groupDist) {
+    if (!this._followStarted) return; // erst nach initialem 'idle' (Terrain geladen)
     const now = performance.now();
     if (now - this._lastCamMs < 220) return;
     this._lastCamMs = now;
