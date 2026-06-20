@@ -28,10 +28,13 @@ function flagSVG(code) {
 
 // Strava-/Instagram-Icons (dezent) mit optionalem Profil-Link. Ist der Link leer,
 // wird das Icon ausgegraut und ist nicht klickbar (Links folgen später).
+// Dezentes Globus-/WWW-Icon (folgt via currentColor der Textfarbe).
+const GLOBE_SVG = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.9"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.9"/><path d="M12 3c3.2 3 3.2 15 0 18M12 3c-3.2 3-3.2 15 0 18" stroke="currentColor" stroke-width="1.9"/></svg>`;
+
 function socialLinks(r) {
   const strava = `<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/></svg>`;
   const insta = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="2"/><circle cx="17.4" cy="6.6" r="1.3" fill="currentColor"/></svg>`;
-  const web = `<svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.9"/><line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" stroke-width="1.9"/><path d="M12 3c3.2 3 3.2 15 0 18M12 3c-3.2 3-3.2 15 0 18" stroke="currentColor" stroke-width="1.9"/></svg>`;
+  const web = GLOBE_SVG;
   const item = (cls, url, label, svg) => url
     ? `<a class="rc-soc ${cls}" href="${url}" target="_blank" rel="noopener noreferrer" aria-label="${label}">${svg}</a>`
     : `<span class="rc-soc ${cls} disabled" aria-label="${label} (Link folgt)" title="Link folgt">${svg}</span>`;
@@ -131,7 +134,7 @@ class Widget {
     if (!el) return;
     el.innerHTML = `
       <div class="roster-head">
-        <a class="roster-team" href="${CONFIG.website}" target="_blank" rel="noopener noreferrer">${CONFIG.team.name}</a>
+        <a class="roster-team" href="${CONFIG.website}" target="_blank" rel="noopener noreferrer" title="Zur Team-Website">${CONFIG.team.name}${GLOBE_SVG}</a>
       </div>
       ${CONFIG.roster.map((r) => {
         const initials = r.name.replace(/^Dr\.?\s*/, '').split(/\s+/).map((w) => w[0]).join('').slice(0, 2).toUpperCase();
