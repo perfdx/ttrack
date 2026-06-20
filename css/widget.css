@@ -273,6 +273,45 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
 /* ---- Footer ---- */
 .tt-footer { padding: 8px 16px; font-size: 11px; color: var(--muted); background: var(--panel); border-top: 1px solid var(--line); text-align: center; }
 
+/* Share-Button (nur Mobile, s. Media-Query) */
+.share-btn {
+  display: none;
+  align-items: center; justify-content: center;
+  width: 34px; height: 34px; padding: 0;
+  border: 1px solid var(--line); border-radius: 50%;
+  background: var(--panel2); color: var(--navy);
+  cursor: pointer; flex-shrink: 0;
+}
+.share-btn svg { width: 18px; height: 18px; display: block; }
+.share-btn:hover { background: #dde5ed; }
+.share-btn:active { background: var(--navy); color: #fff; }
+
+/* QR-Code-Overlay */
+.qr-overlay {
+  display: none; position: fixed; inset: 0; z-index: 2000;
+  align-items: center; justify-content: center;
+  background: rgba(22, 25, 35, 0.92);
+}
+.qr-overlay.show { display: flex; }
+.qr-box {
+  background: #fff; border-radius: 16px; padding: 28px 24px 20px;
+  text-align: center; box-shadow: 0 16px 48px rgba(0,0,0,0.5);
+  display: flex; flex-direction: column; align-items: center; gap: 12px;
+  max-width: 340px; width: 90%;
+}
+.qr-title { margin: 0; font-size: 14px; font-weight: 600; color: var(--navy); letter-spacing: 0.04em; text-transform: uppercase; }
+.qr-url { margin: 0; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+#qr-canvas img { display: block; }
+.qr-close {
+  position: fixed; top: 20px; right: 20px;
+  width: 44px; height: 44px; padding: 0;
+  background: rgba(255,255,255,0.15); color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.3); border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+.qr-close svg { width: 20px; height: 20px; }
+.qr-close:hover { background: rgba(255,255,255,0.28); }
+
 /* ---- Zeit-Simulator ---- */
 .sim-panel {
   display: none; flex-direction: column; gap: 8px;
@@ -354,6 +393,10 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
   .rc-soc.soc-strava:active { color: #fc4c02; }
   .rc-soc.soc-ig:active { color: #e1306c; }
   .rc-soc.soc-web:active { color: var(--navy); }
+
+  /* Footer mit Share-Button */
+  .tt-footer { display: flex; align-items: center; justify-content: space-between; text-align: left; }
+  .share-btn { display: inline-flex; }
 }
 @media (max-width: 560px) {
   .tt-logo { height: 46px; }
