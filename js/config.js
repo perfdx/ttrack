@@ -25,9 +25,9 @@ export const CONFIG = {
 
   // Die sieben Etappen in Reihenfolge.
   stages: [
-    { n: 1, file: 'TT-2026 01 Lienz-Sillian_TRACK.gpx',       from: 'Lienz',        to: 'Sillian',      start: '2026-06-21T09:00:00+02:00' },
+    { n: 1, file: 'TT-2026 01 Lienz-Sillian_TRACK.gpx',       from: 'Lienz',        to: 'Sillian',      start: '2026-06-21T10:00:00+02:00' },
     { n: 2, file: 'TT-2026 02 Sillian-Falcade_TRACK.gpx',     from: 'Sillian',      to: 'Falcade',      start: '2026-06-22T09:00:00+02:00' },
-    { n: 3, file: 'TT-2026 03 Falcade-San_Martino_TRACK.gpx', from: 'Falcade',      to: 'San Martino',  start: '2026-06-23T09:00:00+02:00' },
+    { n: 3, file: 'TT-2026 03 Falcade-San_Martino_TRACK.gpx', from: 'Falcade',      to: 'San Martino',  start: '2026-06-23T10:00:00+02:00' },
     { n: 4, file: 'TT-2026 04 San Martino-Possagno_TRACK.gpx',from: 'San Martino',  to: 'Possagno',     start: '2026-06-24T09:00:00+02:00' },
     { n: 5, file: 'TT-2026 05 Possagno-Semonzo_TRACK.gpx',    from: 'Possagno',     to: 'Semonzo',      start: '2026-06-25T09:00:00+02:00' },
     { n: 6, file: 'TT-2026 06 Semonzo-Lavarone_TRACK.gpx',    from: 'Semonzo',      to: 'Lavarone',     start: '2026-06-26T09:00:00+02:00' },
