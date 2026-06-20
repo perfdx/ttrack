@@ -74,10 +74,67 @@
     <!-- Zeit-Simulator (Test-Werkzeug, normalerweise verborgen) -->
     <div id="sim-panel" class="sim-panel"></div>
 
-    <footer class="tt-footer">Anzeige in Ortszeit (CEST)</footer>
+    <footer class="tt-footer">
+      <span>Anzeige in Ortszeit (CEST)</span>
+      <button id="share-btn" class="share-btn" aria-label="Seite teilen – QR-Code anzeigen">
+        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M3 3h7v7H3V3zm2 2v3h3V5H5z"/>
+          <path d="M14 3h7v7h-7V3zm2 2v3h3V5h-3z"/>
+          <path d="M3 14h7v7H3v-7zm2 2v3h3v-3H5z"/>
+          <path d="M14 14h2v2h-2v-2zm5 0h2v2h-2v-2zm-5 5h2v2h-2v-2zm5 0h2v2h-2v-2zm-2.5-2.5h2v2h-2v-2z"/>
+        </svg>
+      </button>
+    </footer>
+  </div>
+
+  <!-- QR-Code-Overlay (Share / Teilen) -->
+  <div id="qr-overlay" class="qr-overlay" role="dialog" aria-modal="true" aria-label="Seite teilen">
+    <button id="qr-close" class="qr-close" aria-label="Schliessen">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><line x1="4" y1="4" x2="20" y2="20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/><line x1="20" y1="4" x2="4" y2="20" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </button>
+    <div class="qr-box">
+      <p class="qr-title">Seite teilen</p>
+      <div id="qr-canvas"></div>
+      <p class="qr-url">perfdx.github.io/ttrack</p>
+    </div>
   </div>
 
   <script type="module" src="js/widget.js"></script>
+  <script>
+    (function () {
+      var QR_URL = 'https://perfdx.github.io/ttrack/';
+      var overlay = document.getElementById('qr-overlay');
+      var shareBtn = document.getElementById('share-btn');
+      var closeBtn = document.getElementById('qr-close');
+      var canvas  = document.getElementById('qr-canvas');
+      var qrReady = false;
+
+      function openOverlay() {
+        if (!qrReady) {
+          var s = document.createElement('script');
+          s.src = 'assets/js/qrcode.min.js';
+          s.onload = function () {
+            qrReady = true;
+            canvas.innerHTML = '';
+            new QRCode(canvas, { text: QR_URL, width: 280, height: 280, colorDark: '#1b5376', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+            overlay.classList.add('show');
+          };
+          document.head.appendChild(s);
+        } else {
+          canvas.innerHTML = '';
+          new QRCode(canvas, { text: QR_URL, width: 280, height: 280, colorDark: '#1b5376', colorLight: '#ffffff', correctLevel: QRCode.CorrectLevel.M });
+          overlay.classList.add('show');
+        }
+      }
+
+      function closeOverlay() { overlay.classList.remove('show'); }
+
+      if (shareBtn) shareBtn.addEventListener('click', openOverlay);
+      if (closeBtn) closeBtn.addEventListener('click', closeOverlay);
+      if (overlay) overlay.addEventListener('click', function (e) { if (e.target === overlay) closeOverlay(); });
+      document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeOverlay(); });
+    })();
+  </script>
 
   <!-- GoatCounter: cookielose Besucherstatistik (https://www.goatcounter.com).
        Dashboard: https://ttrack2026.goatcounter.com · localhost wird nicht gezählt. -->

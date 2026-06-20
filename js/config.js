@@ -66,7 +66,7 @@ export const CONFIG = {
     defaultMultiplier: 60,        // Standard-Zeitraffer
     multipliers: [1, 10, 60, 300, 1800], // wählbare Geschwindigkeiten
     // Startzeitpunkt des Simulators (kurz vor Etappe 1). null = jetzt.
-    startAt: '2026-06-21T08:59:30+02:00',
+    startAt: '2026-06-21T09:59:30+02:00',
   },
 };
 
