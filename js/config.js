@@ -24,8 +24,6 @@ export const CONFIG = {
   defaultAvgKmh: 22.5,
 
   // Die sieben Etappen in Reihenfolge.
-  // Optional je Etappe: peaks: [{ name: 'Passo X', km: 42 }] -> beschriftet die
-  // automatisch erkannten Pass-/Gipfel-Marker (3D) per Distanz (km) mit Namen.
   stages: [
     { n: 1, file: 'TT-2026 01 Lienz-Sillian_TRACK.gpx',       from: 'Lienz',        to: 'Sillian',      start: '2026-06-21T09:00:00+02:00' },
     { n: 2, file: 'TT-2026 02 Sillian-Falcade_TRACK.gpx',     from: 'Sillian',      to: 'Falcade',      start: '2026-06-22T09:00:00+02:00' },
@@ -49,10 +47,11 @@ export const CONFIG = {
   // photo: Pfad zum Porträtfoto (optional); focus: Bildausschnitt (object-position).
   // number: Startnummer; color: Trikotfarbe der Fahrerin.
   // strava/instagram: Profil-Links (leer = Icon dezent ausgegraut, kein Link).
+  // website: optionaler Website-Link -> drittes Icon (nur wenn gesetzt).
   roster: [
-    { name: 'Dr. Andrea Jeschke', flags: ['DE'],       number: '45B', color: '#ffffff', photo: 'assets/riders/andrea.png', focus: 'center 25%', strava: 'https://www.strava.com/athletes/3635893', instagram: 'https://www.instagram.com/rennrad_liebe/' },
-    { name: 'Katja Mangold',      flags: ['DE'],        number: '45A', color: '#f6a5c0', photo: 'assets/riders/katja.png',  focus: 'center 30%', strava: '', instagram: 'https://www.instagram.com/balance4life.de' },
-    { name: 'Tanja Smith',        flags: ['DE', 'US'],  number: '796', color: '#93c8f0', photo: 'assets/riders/tanja.png',  focus: 'center 28%', strava: '', instagram: 'https://www.instagram.com/tanja5599' },
+    { name: 'Dr. Andrea Jeschke', flags: ['DE'],       number: '45B', color: '#ffffff', photo: 'assets/riders/andrea.png', focus: 'center 25%', strava: 'https://www.strava.com/athletes/3635893', instagram: 'https://www.instagram.com/rennrad_liebe/', website: 'https://www.rennrad-liebe.de/' },
+    { name: 'Katja Mangold',      flags: ['DE'],        number: '45A', color: '#f6a5c0', photo: 'assets/riders/katja.png',  focus: 'center 30%', strava: 'https://strava.app.link/GAC2tv4073b', instagram: 'https://www.instagram.com/balance4life.de', website: 'https://www.balance4life.de/' },
+    { name: 'Tanja Smith',        flags: ['DE', 'US'],  number: '796', color: '#93c8f0', photo: 'assets/riders/tanja.png',  focus: 'center 28%', strava: 'https://strava.app.link/lay05N7073b', instagram: 'https://www.instagram.com/tanja5599' },
   ],
 
   // Gruppenverhalten: leichte, reproduzierbare (reload-stabile) Tempo-Schwankung.

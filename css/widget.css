@@ -214,6 +214,7 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
 .rc-soc svg { width: 16px; height: 16px; display: block; }
 .rc-soc.soc-strava:hover { color: #fc4c02; }
 .rc-soc.soc-ig:hover { color: #e1306c; }
+.rc-soc.soc-web:hover { color: var(--navy); }
 .rc-soc.disabled { opacity: 0.4; pointer-events: none; }
 
 /* ---- Overlay (Countdown / Status) ---- */
@@ -350,6 +351,7 @@ body { font-family: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, san
   .rc-soc svg { width: 20px; height: 20px; }
   .rc-soc.soc-strava:active { color: #fc4c02; }
   .rc-soc.soc-ig:active { color: #e1306c; }
+  .rc-soc.soc-web:active { color: var(--navy); }
 }
 @media (max-width: 560px) {
   .tt-logo { height: 46px; }
